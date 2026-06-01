@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme {
+  /*
+   * PALETTE — 5 anchor colors → 4 scales.
+   *
+   * #273043 → ink-900  (navy / dark structure)
+   * #F7F4F3 → ink-0    (warm cream canvas)
+   * #DD0426 → brand-600 (red / primary CTA — action only)
+   * #2081C3 → blue-500  (sky blue / information & categories)
+   * #F39237 → amber-500 (orange / stats & highlights)
+   */
+
+  /* INK — warm cream (#F7F4F3) to deep navy (#273043) */
+  --color-ink-0:   oklch(0.968 0.007 30);    /* ≈ #F7F4F3  warm cream canvas */
+  --color-ink-50:  oklch(0.950 0.008 50);
+  --color-ink-100: oklch(0.928 0.010 100);
+  --color-ink-200: oklch(0.890 0.015 180);
+  --color-ink-300: oklch(0.840 0.020 220);
+  --color-ink-400: oklch(0.760 0.024 240);
+  --color-ink-500: oklch(0.638 0.028 248);
+  --color-ink-600: oklch(0.490 0.036 252);
+  --color-ink-700: oklch(0.362 0.040 252);
+  --color-ink-800: oklch(0.285 0.042 252);
+  --color-ink-900: oklch(0.215 0.042 252);   /* ≈ #273043  deep navy */
+  --color-ink-950: oklch(0.152 0.030 252);
+
+  /* BRAND — red family anchored at #DD0426 (brand-600) */
+  --color-brand-50:  oklch(0.966 0.014 23);
+  --color-brand-100: oklch(0.938 0.042 23);
+  --color-brand-200: oklch(0.878 0.095 23);
+  --color-brand-300: oklch(0.786 0.152 23);
+  --color-brand-400: oklch(0.660 0.195 21);
+  --color-brand-500: oklch(0.572 0.220 20);
+  --color-brand-600: oklch(0.520 0.215 19);  /* ≈ #DD0426 */
+  --color-brand-700: oklch(0.435 0.188 19);
+  --color-brand-800: oklch(0.338 0.148 18);
+  --color-brand-900: oklch(0.245 0.100 18);
+  --color-brand-950: oklch(0.162 0.062 18);
+
+  /* BLUE — sky blue family anchored at #2081C3 (blue-500) */
+  --color-blue-50:  oklch(0.962 0.018 233);
+  --color-blue-100: oklch(0.925 0.045 233);
+  --color-blue-200: oklch(0.870 0.090 233);
+  --color-blue-300: oklch(0.775 0.130 233);
+  --color-blue-400: oklch(0.665 0.145 233);
+  --color-blue-500: oklch(0.565 0.140 233);  /* ≈ #2081C3 */
+  --color-blue-600: oklch(0.495 0.135 233);
+  --color-blue-700: oklch(0.395 0.120 232);
+  --color-blue-800: oklch(0.305 0.095 232);
+  --color-blue-900: oklch(0.225 0.065 232);
+  --color-blue-950: oklch(0.155 0.040 232);
+
+  /* AMBER — orange family anchored at #F39237 (amber-500) */
+  --color-amber-50:  oklch(0.975 0.018 80);
+  --color-amber-100: oklch(0.950 0.045 80);
+  --color-amber-200: oklch(0.910 0.090 78);
+  --color-amber-300: oklch(0.850 0.135 75);
+  --color-amber-400: oklch(0.795 0.165 72);
+  --color-amber-500: oklch(0.725 0.180 68);  /* ≈ #F39237 */
+  --color-amber-600: oklch(0.648 0.175 65);
+  --color-amber-700: oklch(0.545 0.155 62);
+  --color-amber-800: oklch(0.420 0.120 60);
+  --color-amber-900: oklch(0.310 0.085 58);
+  --color-amber-950: oklch(0.215 0.055 56);
+
+  --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.48s var(--ease-out-quart) both;
+  }
+  .animate-rise {
+    animation: rise 0.56s var(--ease-out-expo) both;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: oklch(0.968 0.007 30); /* ink-0 warm cream #F7F4F3 */
+  color: oklch(0.215 0.042 252);           /* ink-900 navy #273043 */
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: oklch(0.938 0.042 23); /* brand-100 */
+  color: oklch(0.338 0.148 18);            /* brand-800 */
+}

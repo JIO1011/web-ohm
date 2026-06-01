@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx skills *)",
+      "Bash(npx uipro *)",
+      "Skill(impeccable)",
+      "Skill(impeccable:*)",
+      "Bash(node /home/jio/Documentos/web-ohm/.claude/skills/impeccable/scripts/load-context.mjs)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}
