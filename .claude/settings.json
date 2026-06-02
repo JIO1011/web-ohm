@@ -18,7 +18,8 @@
       "Bash(git commit -m ' *)",
       "Bash(npm --version)",
       "Bash(bash .husky/pre-commit)",
-      "Bash(git commit -m 'fix: replace npx with direct bin path in pre-commit hook *)"
+      "Bash(git commit -m 'fix: replace npx with direct bin path in pre-commit hook *)",
+      "Bash(git commit -m 'fix: export NVM node path in pre-commit hook for VS Code GUI *)"
     ]
   }
 }
