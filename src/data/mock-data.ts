@@ -7,251 +7,273 @@ import type {
 
 export const servicesData: Service[] = [
   {
-    id: "frontend",
-    title: "Frontend moderno",
-    subtitle: "Interfaces rápidas, accesibles y mantenibles.",
+    id: "software",
+    title: "Desarrollo de software",
+    subtitle: "Plataformas web y aplicaciones full-stack.",
     description:
-      "Construimos interfaces web en React, Next.js y TypeScript. Priorizamos tiempos de carga reales, accesibilidad y un código que tu equipo pueda mantener cuando ya no estemos.",
-    icon: "LayoutGrid",
-    category: "Desarrollo",
+      "Construimos plataformas web y aplicaciones a medida con React, TypeScript y Node. Priorizamos que el sistema sea fácil de operar y mantener, no solo de entregar.",
+    icon: "Code",
+    category: "Software",
     detailedDescription:
-      "El frontend es donde se gana o se pierde la primera impresión. Trabajamos con la App Router de Next.js, Server Components cuando aportan, y un sistema de diseño en Tailwind. Medimos Core Web Vitals con datos reales y dejamos el proyecto con linting, testing y reglas de accesibilidad integradas en CI.",
-    technologies: ["React 19", "Next.js 15", "TypeScript", "Tailwind CSS v4", "Framer Motion", "Playwright"],
+      "Trabajamos full-stack: frontend con React y Next.js, backend en Node y bases de datos como PostgreSQL o Firebase. Integramos pasarelas de pago locales (PayPhone), autenticación y reportes. Ejemplo real: ReactiLab, una plataforma de gestión de laboratorio químico hoy en producción.",
+    technologies: ["React", "TypeScript", "Next.js", "Node.js", "Tailwind CSS", "Firebase", "PostgreSQL"],
     benefits: [
-      "Tiempos de carga LCP por debajo de 1.5 s en condiciones reales.",
-      "Accesibilidad WCAG 2.1 AA verificada con herramientas automatizadas.",
-      "Server Components y rutas dinámicas donde aportan, no por moda.",
-      "Repositorio con linting, testing y CI listos para que tu equipo continúe.",
+      "Interfaces rápidas y mantenibles, no solo presentables.",
+      "Backend con autenticación, validación y reportes desde el inicio.",
+      "Integración de pasarelas de pago locales como PayPhone.",
+      "Código ordenado que tu equipo puede continuar.",
     ],
     problemsSolved: [
-      "Páginas lentas que pierden tráfico orgánico por mala puntuación de Web Vitals.",
-      "Frontends legacy que cuesta evolucionar sin romper otras partes.",
-      "Mala experiencia móvil en formularios, navegación o carga inicial.",
+      "Procesos que todavía se llevan en papel o en hojas de cálculo.",
+      "Sistemas internos lentos o difíciles de mantener.",
+      "Falta de trazabilidad y reportes en la operación diaria.",
     ],
   },
   {
-    id: "backend",
-    title: "Backend y APIs",
-    subtitle: "Servicios escalables sobre Node, Python o Go.",
+    id: "ai",
+    title: "IA aplicada e investigación",
+    subtitle: "Modelos, agentes y análisis de datos para casos reales.",
     description:
-      "Diseñamos APIs REST o GraphQL y los servicios que las sostienen. Pensamos en operación desde el inicio: logs útiles, métricas, despliegues sin downtime y costos visibles.",
-    icon: "Server",
-    category: "Desarrollo",
-    detailedDescription:
-      "Decidimos la tecnología por el caso, no por preferencia. Trabajamos con Node, Python o Go según el equipo y el problema. Cada API queda con autenticación, validación de esquemas, observabilidad básica y pruebas de integración que se ejecutan en CI.",
-    technologies: ["Node.js", "NestJS", "Python", "PostgreSQL", "Redis", "OpenAPI", "Sentry"],
-    benefits: [
-      "Latencias y errores monitoreados desde el primer día.",
-      "Validación de entrada con Zod o equivalentes, no a mano.",
-      "Patrón de cola para tareas pesadas que liberan el hilo HTTP.",
-      "Documentación OpenAPI generada del código, no escrita aparte.",
-    ],
-    problemsSolved: [
-      "APIs internas indocumentadas que nadie en el equipo sabe operar.",
-      "Cuellos de botella en consultas que escalan mal a partir de cierto volumen.",
-      "Datos corruptos por concurrencia mal manejada en transacciones.",
-    ],
-  },
-  {
-    id: "ai-ml",
-    title: "Integración de IA",
-    subtitle: "Agentes y RAG sobre LLMs comerciales.",
-    description:
-      "Conectamos modelos como Gemini o GPT a tus datos con flujos RAG, agentes funcionales y validación de salida. Empezamos con un caso de uso concreto, no con un proyecto de investigación.",
+      "Aplicamos IA donde aporta valor: agentes, RAG, automatización y análisis. Empezamos por un caso concreto, medimos resultados y crecemos solo si lo justifican.",
     icon: "BrainCircuit",
-    category: "Innovación",
+    category: "Software",
     detailedDescription:
-      "La IA generativa rinde cuando hay un caso claro: contestar consultas internas con tu documentación, clasificar tickets, redactar borradores, extraer datos de PDFs. Empezamos por uno, medimos precisión y costo, y crecemos solo si el resultado lo justifica.",
-    technologies: ["Gemini 2.0 Flash", "OpenAI API", "LangChain", "pgvector", "Pinecone", "Python"],
+      "Tenemos experiencia en investigación aplicada en biomedicina: IA para análisis de tejidos histopatológicos y procesamiento de señales EEG. Llevamos ese rigor a casos de empresa: asistentes sobre tu documentación, clasificación y extracción de datos.",
+    technologies: ["Python", "PyTorch", "OpenAI", "Gemini", "RAG", "OpenBCI", "Pandas"],
     benefits: [
-      "Pipeline RAG con métricas de precisión por consulta, no estimaciones.",
-      "Control de costos por token con caché y reranking cuando aplica.",
-      "Salida estructurada validada con Zod o pydantic.",
-      "Plan claro de qué hace falta en datos antes de pasar a producción.",
+      "Casos acotados con métricas, no proyectos de investigación abiertos.",
+      "Experiencia real en señales biomédicas (EEG) e histopatología.",
+      "Salida validada y control de costos por uso.",
+      "Plan claro de qué datos hacen falta antes de producción.",
     ],
     problemsSolved: [
-      "Equipos saturados de consultas repetitivas que un agente puede resolver.",
-      "Documentación interna que nadie consulta porque está en cinco lugares.",
-      "Procesos manuales de extracción de datos desde PDFs o correos.",
-    ],
-  },
-  {
-    id: "mobile",
-    title: "Aplicaciones móviles",
-    subtitle: "iOS y Android con React Native o Flutter.",
-    description:
-      "Construimos apps móviles con una base de código compartida y la cuota de nativo que el caso requiera. Publicamos en App Store y Google Play y dejamos el pipeline funcionando.",
-    icon: "Smartphone",
-    category: "Desarrollo",
-    detailedDescription:
-      "Elegimos React Native o Flutter según el equipo y los requisitos de hardware (cámara, sensores, biometría). Diseñamos para uso offline cuando importa, optimizamos consumo de batería y dejamos los flujos de publicación documentados.",
-    technologies: ["React Native", "Expo", "Flutter", "Swift", "Kotlin", "EAS Build", "Sentry"],
-    benefits: [
-      "Una base de código para iOS y Android, con módulos nativos cuando aplica.",
-      "Modo offline con sincronización cuando vuelve la conexión.",
-      "Publicación en stores con perfiles, certificados y release notes.",
-      "Crash reporting y telemetría integrados desde la versión 1.0.",
-    ],
-    problemsSolved: [
-      "Mantener dos equipos separados para iOS y Android cuando no es necesario.",
-      "Apps que se sienten lentas en gama media o baja por sobreoptimizar visualmente.",
-      "Falta de visibilidad sobre crashes reales en producción.",
-    ],
-  },
-  {
-    id: "ui-ux",
-    title: "Diseño de producto",
-    subtitle: "Interfaces que tu equipo puede mantener.",
-    description:
-      "Diseñamos interfaces y flujos pensando en cómo se construirán. Entregamos un sistema de diseño usable por desarrolladores, no un PDF estático que se quede en Figma.",
-    icon: "Cpu",
-    category: "Diseño",
-    detailedDescription:
-      "Trabajamos en Figma con componentes que mapean a los del código: si el botón tiene cuatro variantes en el sistema, son cuatro en el repo. Investigamos con usuarios reales cuando el alcance lo permite y validamos decisiones con prototipos clicables antes de programar.",
-    technologies: ["Figma", "Auto Layout", "Variables", "Tokens Studio", "Tailwind", "Storybook"],
-    benefits: [
-      "Sistema de diseño con tokens compartidos entre Figma y el código.",
-      "Prototipos clicables con flujos completos antes del desarrollo.",
-      "Documentación de uso para cada componente, no solo el render.",
-      "Auditoría de accesibilidad incluida en cada componente.",
-    ],
-    problemsSolved: [
-      "Inconsistencia entre lo diseñado en Figma y lo que termina en producción.",
-      "Sistemas de diseño que envejecen porque diseño y código se desincronizan.",
-      "Flujos confusos descubiertos tarde, cuando ya están programados.",
-    ],
-  },
-  {
-    id: "qa-testing",
-    title: "QA automatizado",
-    subtitle: "Pruebas que se ejecutan solas en cada commit.",
-    description:
-      "Reemplazamos pruebas manuales repetitivas por pipelines de Playwright o Cypress que se ejecutan en CI. Dejamos a tu equipo con cobertura razonable y reportes legibles.",
-    icon: "ShieldAlert",
-    category: "Seguridad",
-    detailedDescription:
-      "Identificamos los flujos críticos (registro, pago, exportación de datos) y los cubrimos con pruebas end-to-end. Agregamos pruebas unitarias donde aportan más que las e2e. Integramos los reportes en GitHub Actions o GitLab CI para que cada PR muestre el estado.",
-    technologies: ["Playwright", "Cypress", "Vitest", "Jest", "GitHub Actions", "Sentry"],
-    benefits: [
-      "Cobertura de flujos críticos automatizada y visible en cada PR.",
-      "Reportes de fallos con video y trace de Playwright para reproducir.",
-      "Pipelines rápidos: bajo 10 minutos en proyectos medianos.",
-      "Estrategia clara de qué probar a mano y qué automatizar.",
-    ],
-    problemsSolved: [
-      "Miedo a desplegar viernes por la tarde porque nadie sabe qué se rompió.",
-      "Tickets repetidos por bugs en flujos que ya fueron arreglados.",
-      "QA manual saturado revisando regresiones en lugar de explorar.",
-    ],
-  },
-  {
-    id: "cloud-devops",
-    title: "Cloud y DevOps",
-    subtitle: "Infraestructura como código en AWS o GCP.",
-    description:
-      "Diseñamos y operamos infraestructura en AWS o GCP. Todo en Terraform, con pipelines de despliegue versionados y métricas de costo visibles desde el primer mes.",
-    icon: "Cloud",
-    category: "Innovación",
-    detailedDescription:
-      "Pasamos infraestructura manual a código revisable. Configuramos pipelines de CI/CD que despliegan sin downtime, monitoreo con Prometheus o CloudWatch y alertas que avisan algo accionable, no ruido.",
-    technologies: ["AWS", "Google Cloud", "Terraform", "Docker", "Kubernetes", "GitHub Actions", "Prometheus"],
-    benefits: [
-      "Infraestructura versionada, revisable y replicable entre entornos.",
-      "Despliegues sin downtime con rollback automático ante fallos.",
-      "Alertas con SLO claros, no umbrales arbitrarios.",
-      "Reporte de costos por servicio y entorno desde el primer mes.",
-    ],
-    problemsSolved: [
-      "Despliegues manuales que solo una persona del equipo sabe ejecutar.",
-      "Cuentas cloud con costos descontrolados sin visibilidad por servicio.",
-      "Entornos de staging que no se parecen a producción.",
+      "Tareas repetitivas que un agente puede resolver.",
+      "Datos sin explotar que podrían guiar decisiones.",
+      "Procesos manuales de clasificación o extracción de información.",
     ],
   },
   {
     id: "cybersecurity",
     title: "Ciberseguridad y DevSecOps",
-    subtitle: "Auditorías OWASP y endurecimiento práctico.",
+    subtitle: "Auditorías, GRC y endurecimiento práctico.",
     description:
-      "Hacemos auditorías de código y endurecimiento de APIs siguiendo OWASP. Integramos análisis estático y de dependencias en CI, y dejamos un plan de remediación priorizado.",
+      "Auditamos y endurecemos aplicaciones e infraestructura siguiendo marcos reconocidos. Convertimos riesgos en controles medibles, sin frenar al equipo.",
     icon: "Shield",
-    category: "Seguridad",
+    category: "Software",
     detailedDescription:
-      "Empezamos con un alcance acotado (una API, un microservicio, una integración). Documentamos hallazgos con CVSS, sugerimos mitigación concreta y validamos la corrección con un retest. Incluimos buenas prácticas para que el equipo evite el patrón en el futuro.",
-    technologies: ["OWASP Top 10", "Burp Suite", "Semgrep", "Trivy", "HashiCorp Vault", "AWS IAM"],
+      "Lideramos esta área con criterio formal: Máster en Ciberseguridad e ISO/IEC 27001 (TÜV Rheinland), aplicando NIST, OWASP y MITRE ATT&CK. Integramos prácticas DevSecOps en el ciclo de desarrollo y auditamos configuraciones en la nube.",
+    technologies: ["OWASP", "NIST", "MITRE ATT&CK", "ISO/IEC 27001", "DevSecOps", "Defender for Cloud"],
     benefits: [
-      "Reporte de vulnerabilidades con severidad CVSS y pasos de mitigación.",
-      "Retest incluido para validar correcciones aplicadas.",
-      "Análisis estático integrado en CI para detectar regresiones.",
-      "Rotación de secretos automatizada con Vault o servicios equivalentes.",
+      "Riesgos convertidos en controles medibles y priorizados.",
+      "Marcos reconocidos (NIST, OWASP, MITRE), no recetas genéricas.",
+      "Seguridad integrada en el desarrollo, no al final.",
+      "Criterio certificado: ISO/IEC 27001 (TÜV Rheinland).",
     ],
     problemsSolved: [
-      "APIs internas expuestas sin saberlo por configuración heredada.",
-      "Secretos hardcodeados en repositorios viejos sin política de rotación.",
-      "Dependencias con CVEs conocidas en producción sin proceso de actualización.",
+      "Aplicaciones expuestas por configuraciones heredadas.",
+      "Falta de criterio formal para cumplir normativa.",
+      "Vulnerabilidades que pasan desapercibidas sin auditoría.",
+    ],
+  },
+  {
+    id: "electronics",
+    title: "Electrónica, embebidos e IoT",
+    subtitle: "Circuitos, microcontroladores y dispositivos conectados.",
+    description:
+      "Diseñamos electrónica a medida y sistemas embebidos: desde el circuito hasta el firmware y la conexión con apps o la nube.",
+    icon: "CircuitBoard",
+    category: "Hardware",
+    detailedDescription:
+      "Trabajamos con microcontroladores (STM32, Arduino, ESP32) para control, sensado y comunicación. Ejemplos reales: control inalámbrico por Bluetooth con app móvil, librerías de pantalla para STM32 y monitoreo con Node-RED y ESP32.",
+    technologies: ["STM32", "Arduino", "ESP32", "Bluetooth", "Node-RED", "C/C++", "IoT"],
+    benefits: [
+      "Del circuito al firmware y la app, con un solo equipo.",
+      "Control y monitoreo remoto cuando el caso lo pide.",
+      "Hardware pensado para uso real, no solo prototipo.",
+      "Integración con sistemas y dashboards existentes.",
+    ],
+    problemsSolved: [
+      "Equipos sin control remoto ni telemetría.",
+      "Necesidad de electrónica a medida que no existe en el mercado.",
+      "Prototipos que no resisten el uso en campo.",
+    ],
+  },
+  {
+    id: "automation",
+    title: "Automatización y robótica",
+    subtitle: "Control, sensado y actuación para procesos.",
+    description:
+      "Automatizamos procesos técnicos e industriales integrando control, sensores y actuadores con criterio de ingeniería.",
+    icon: "Cog",
+    category: "Hardware",
+    detailedDescription:
+      "Diseñamos soluciones de automatización y robótica aplicada para proyectos industriales y de eventos. Ejemplo real: la Máquina 360 de alta estabilidad, con sistema de control, motor y operación desde app móvil.",
+    technologies: ["PLC", "Arduino", "Sensores", "Actuadores", "Control", "Robótica"],
+    benefits: [
+      "Procesos manuales convertidos en operación controlada.",
+      "Diseño mecánico, electrónico y de control integrado.",
+      "Validación funcional en campo, no solo en banco.",
+      "Operación simple para quien lo usa a diario.",
+    ],
+    problemsSolved: [
+      "Procesos repetitivos que dependen de operación manual.",
+      "Equipos inestables o inseguros bajo uso intensivo.",
+      "Falta de integración entre mecánica, electrónica y control.",
+    ],
+  },
+  {
+    id: "maintenance",
+    title: "Mantenimiento industrial y biomédico",
+    subtitle: "Diagnóstico, reparación y disponibilidad de equipos.",
+    description:
+      "Mantenemos equipos electromecánicos, industriales y biomédicos para sostener su continuidad operativa, con enfoque preventivo, correctivo y predictivo.",
+    icon: "Wrench",
+    category: "Mantenimiento",
+    detailedDescription:
+      "Inspección, limpieza, ajuste y reparación con criterio técnico. Ejemplos reales: inspección y mantenimiento de una mesa quirúrgica y reparación integral de un caldero de agua caliente. Trabajamos para maximizar la disponibilidad y reducir paradas.",
+    technologies: ["Electromecánica", "Instrumentación", "Equipos biomédicos", "Mantenimiento predictivo"],
+    benefits: [
+      "Diagnóstico técnico antes de intervenir, no a ciegas.",
+      "Mantenimiento preventivo, correctivo y predictivo.",
+      "Experiencia en equipos médicos e industriales.",
+      "Foco en disponibilidad y reducción de paradas.",
+    ],
+    problemsSolved: [
+      "Equipos críticos con fallas recurrentes o paradas.",
+      "Falta de mantenimiento preventivo planificado.",
+      "Equipos biomédicos fuera de parámetros de operación segura.",
+    ],
+  },
+  {
+    id: "design-3d",
+    title: "Diseño 3D y fabricación digital",
+    subtitle: "Modelado, escaneo e impresión 3D con fidelidad.",
+    description:
+      "Diseñamos y reconstruimos piezas en 3D con precisión dimensional, listas para impresión o fabricación.",
+    icon: "Boxes",
+    category: "Diseño",
+    detailedDescription:
+      "Escaneo de modelos físicos, refinamiento en Blender y preparación de archivos STL. Ejemplos reales: placas dentales para laboratorio odontológico y modelos anatómicos a escala 1:1 publicados en Cults3D.",
+    technologies: ["Blender", "Escaneo 3D", "Impresión 3D", "STL", "CAD"],
+    benefits: [
+      "Reconstrucción digital con precisión 1:1.",
+      "Optimización estructural antes de imprimir.",
+      "Archivos STL listos para fabricación.",
+      "Experiencia en piezas técnicas y anatómicas.",
+    ],
+    problemsSolved: [
+      "Piezas sin repuesto que hay que reconstruir.",
+      "Modelos físicos que se necesitan en digital.",
+      "Prototipos que requieren precisión dimensional.",
+    ],
+  },
+  {
+    id: "mechanical-design",
+    title: "Diseño y fabricación mecánica",
+    subtitle: "De planos industriales a piezas listas para fabricar.",
+    description:
+      "Llevamos conceptos a planos mecánicos y eléctricos, ensamblajes 3D y soluciones metalmecánicas listas para fabricar, validar e iterar.",
+    icon: "Hammer",
+    category: "Diseño",
+    detailedDescription:
+      "Diseño mecánico y eléctrico con criterio industrial: planos, ensamblajes y fabricación de estructuras, soportes y soluciones a medida con soldadura y mecánica aplicada en taller.",
+    technologies: ["CAD", "Diseño mecánico", "Metalmecánica", "Soldadura", "Planos eléctricos"],
+    benefits: [
+      "Del concepto al plano listo para fabricar.",
+      "Diseño mecánico y eléctrico bajo un mismo criterio.",
+      "Fabricación de estructuras y soportes a medida.",
+      "Validación e iteración antes de producir en serie.",
+    ],
+    problemsSolved: [
+      "Ideas sin planos formales para fabricar.",
+      "Necesidad de estructuras o soportes a medida.",
+      "Soluciones mecánicas que no existen en catálogo.",
     ],
   },
 ];
 
+// Casos reales de OhmRoyal (extraídos del portafolio original ohmroyal.org).
+// Selección curada que muestra el rango multidisciplinar: software, control
+// electrónico, mantenimiento biomédico y diseño 3D.
 export const caseStudies: CaseStudy[] = [
   {
-    id: "mozaico-interactivo",
-    title: "Visualizador interactivo para Mozaico",
-    category: "Plataforma de datos",
+    id: "reactilab",
+    title: "ReactiLab: gestión digital de laboratorio químico",
+    category: "Desarrollo FullStack",
     description:
-      "Reescribimos el core de una plataforma de visualización de datos que colapsaba bajo carga concurrente. Bajamos la latencia de consulta y movimos la infraestructura a AWS gestionada por Terraform.",
-    client: "Mozaico S.A.S.",
+      "Plataforma web para digitalizar el inventario químico, la aprobación de movimientos de sustancias controladas y el cumplimiento normativo de un laboratorio que operaba en papel.",
+    client: "Laboratorio químico (Ecuador)",
     results: [
-      "Latencia de consulta: de 4.8 s a 220 ms con caché Redis y consultas optimizadas.",
-      "Soporte estable de 15.000 sesiones concurrentes en pruebas de carga.",
-      "Infraestructura AWS gestionada por Terraform, con entornos de staging y producción idénticos.",
-      "Reducción del 30 % en el costo mensual de cómputo gracias al autoescalado por métricas reales.",
+      "Procesos que antes se llevaban en papel, ahora digitales y auditables.",
+      "Trazabilidad completa del uso de reactivos y alertas automáticas de caducidad.",
+      "Gestión integrada de residuos y reportes para auditoría en un clic.",
+      "Sitio en producción y público en reacti-lab.com, con pasarela de pagos PayPhone.",
     ],
-    technologies: ["Next.js", "D3.js", "Express", "Redis", "AWS ECS", "Terraform", "PostgreSQL"],
-    imageUrl: "/mozaico_preview",
+    technologies: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Firebase", "PayPhone"],
+    imageUrl: "/work/reactilab.webp",
     challenge:
-      "El visualizador previo se construyó hace años sobre una stack que ya no escalaba. A partir de 300 analistas concurrentes, las consultas tardaban más de 4 segundos y la CPU de la base de datos quedaba en 100 %. El equipo interno tenía que reiniciar servicios manualmente varias veces por semana.",
+      "El laboratorio gestionaba el inventario de reactivos, los movimientos de sustancias controladas y el cumplimiento normativo en papel. El proceso era lento, difícil de auditar y propenso a errores en fechas de caducidad y trazabilidad.",
     solution:
-      "Movimos el renderizado interactivo al cliente con D3 sobre Next.js. Introdujimos una capa de caché Redis para las consultas más frecuentes y reescribimos las queries más pesadas con índices compuestos. La infraestructura pasó a contenedores Docker sobre AWS ECS detrás de un Application Load Balancer, todo descrito en Terraform.",
+      "Construimos una plataforma web con React, TypeScript y Tailwind en el frontend, Node.js en el backend y Firebase como base de datos. Incluye trazabilidad del uso de reactivos, alertas de caducidad, gestión de residuos, reportes de auditoría en un clic y planes de servicio con pasarela de pagos PayPhone (Ecuador).",
   },
   {
-    id: "securevault-enterprise",
-    title: "SecureVault: auditoría y endurecimiento",
-    category: "Ciberseguridad y DevOps",
+    id: "maquina-360",
+    title: "Máquina 360 de alta estabilidad para eventos",
+    category: "Mecánica, electrónica y control",
     description:
-      "Auditoría OWASP, migración a Kubernetes y gestión de secretos para una fintech de pagos móviles. Acortamos el ciclo de parches de seguridad de días a minutos.",
-    client: "SecureVault Ltd",
+      "Diseño y fabricación de una plataforma giratoria 360° reforzada para uso recreativo intensivo, orientada a la seguridad de los usuarios y a la estabilidad de grabación durante saltos y baile.",
+    client: "Productora de eventos (Trébol Plus)",
     results: [
-      "Cero vulnerabilidades críticas tras la auditoría OWASP y el retest.",
-      "Capacidad de pico verificada de 850 TPS en pruebas de carga sobre Kubernetes EKS.",
-      "Reducción del tiempo de despliegue de parches de seguridad de 3 días a 12 minutos.",
-      "Reporte de hallazgos con severidad CVSS y plan de remediación priorizado.",
+      "Equipo 360 reforzado y operativo, apto para uso recreativo con cargas dinámicas.",
+      "Mejora notable de la estabilidad de grabación frente a configuraciones convencionales.",
+      "Control integral desde app móvil para operación rápida durante el evento.",
+      "Entrega final validada en campo con el cliente.",
     ],
-    technologies: ["Kubernetes EKS", "GitHub Actions", "HashiCorp Vault", "Go", "AWS IAM", "Trivy"],
-    imageUrl: "/securevault_preview",
+    technologies: ["Diseño CAD", "Arduino Nano", "Bluetooth", "App móvil", "Electrónica AC-DC"],
+    imageUrl: "/work/maquina-360.webp",
     challenge:
-      "La infraestructura de SecureVault corría sobre servidores manuales sin redundancia ni rotación automatizada de secretos. Cada parche de seguridad implicaba downtime, y la siguiente auditoría externa de cumplimiento estaba a tres meses.",
+      "Las máquinas 360 del mercado fallan en estabilidad y seguridad bajo cargas dinámicas (saltos, baile), lo que compromete tanto la integridad del usuario como la calidad de la grabación.",
     solution:
-      "Migramos los servicios críticos a Kubernetes EKS con redes privadas y políticas de pod restringidas. Los secretos pasaron a HashiCorp Vault con rotación automática. Integramos análisis estático con Semgrep y escaneo de imágenes con Trivy en GitHub Actions, de modo que cada PR muestra el estado de seguridad antes del merge.",
+      "Proyecto integral de ingeniería mecánica, electrónica y control: desde el análisis de fallas comunes del mercado hasta el diseño CAD, la construcción reforzada, el control inalámbrico y la validación en campo. Integra un sistema eléctrico AC-DC para el motor y control con Arduino Nano + Bluetooth, con una app móvil para encendido, velocidad, luces LED neón y máquina de humo.",
   },
   {
-    id: "aura-ai-analytics",
-    title: "Aura: predicción de stock con RAG y modelos propios",
-    category: "Integración de IA",
+    id: "mesa-quirurgica",
+    title: "Inspección y mantenimiento de mesa quirúrgica",
+    category: "Mantenimiento biomédico",
     description:
-      "Construimos un sistema que predice stock estacional para una cadena de retail y lo combina con un agente conversacional sobre datos internos para que los operadores consulten sin escribir SQL.",
-    client: "Aura Retail Group",
+      "Servicio técnico de inspección, limpieza profunda y ajuste mecánico-eléctrico para restablecer la operación segura y precisa de una mesa quirúrgica.",
+    client: "Área biomédica / clínica",
     results: [
-      "Precisión del 93 % en predicción de stock estacional a 60 días, validada contra el histórico real.",
-      "Reducción del inventario excedente equivalente a USD 1.2 M anuales en los primeros 12 meses.",
-      "Latencia del agente conversacional bajo 500 ms en el percentil 95.",
-      "Integración con el ERP existente en 4 semanas, sin cambios en sus tablas operativas.",
+      "Mesa quirúrgica operativa dentro de parámetros funcionales para uso clínico.",
+      "Mecanismos móviles críticos limpiados y lubricados.",
+      "Desplazamientos y posicionamientos verificados desde el panel de mando.",
     ],
-    technologies: ["Python", "FastAPI", "PyTorch", "Pinecone", "LangChain", "Gemini 2.0", "Next.js"],
-    imageUrl: "/aura_ai_preview",
+    technologies: ["Inspección técnica", "Electromecánica", "Mantenimiento biomédico"],
+    imageUrl: "/work/mesa-quirurgica.webp",
     challenge:
-      "Aura pronosticaba inventario con hojas de cálculo actualizadas una vez al mes. El error promedio dejaba millones inmovilizados en bodega. Además, el equipo de operaciones dependía del área de datos para responder cualquier consulta histórica.",
+      "Una mesa quirúrgica presentaba desplazamientos y posicionamientos imprecisos, con riesgo para un uso clínico seguro.",
     solution:
-      "Entrenamos un modelo en PyTorch con cuatro años de ventas y movimientos de inventario, expuesto vía FastAPI. Montamos un agente RAG sobre Gemini con Pinecone para que el equipo de operaciones consulte el histórico en lenguaje natural. Todo conectado al ERP por una capa de adaptación de solo lectura, sin tocar las tablas operativas.",
+      "Inspección técnica completa de componentes mecánicos y eléctricos, limpieza profunda y lubricación de los mecanismos móviles críticos, y verificación de los desplazamientos y posicionamientos desde el panel de mando hasta dejar el equipo operativo.",
+  },
+  {
+    id: "placas-dentales-3d",
+    title: "Placas dentales para modelos de trabajo (diseño 3D)",
+    category: "Diseño 3D y fabricación digital",
+    description:
+      "Diseño y reconstrucción digital de placas dentales para moldes y modelos de laboratorio odontológico, con fidelidad dimensional y mejoras mecánicas, listas para impresión 3D.",
+    client: "Laboratorio odontológico",
+    results: [
+      "Placas reconstruidas con precisión dimensional 1:1.",
+      "Resistencia estructural optimizada respecto a los modelos originales.",
+      "Archivos STL listos para impresión 3D.",
+      "Publicadas y disponibles en Cults3D.",
+    ],
+    technologies: ["Blender", "Escaneo 3D", "Impresión 3D", "STL"],
+    imageUrl: "/work/placas-dentales.webp",
+    challenge:
+      "El laboratorio necesitaba placas dentales (N° 1, 2, 3 y 5) con fidelidad dimensional 1:1 y mayor resistencia estructural, partiendo de modelos físicos existentes.",
+    solution:
+      "Digitalizamos las piezas mediante escaneo de los modelos originales y las refinamos en Blender para optimizar la resistencia estructural, mantener la precisión 1:1 y prepararlas para impresión 3D en formato STL.",
   },
 ];
 

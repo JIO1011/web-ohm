@@ -2,14 +2,14 @@ import Link from "next/link";
 import {
   ArrowRight,
   BrainCircuit,
-  Cloud,
+  CircuitBoard,
   Code,
-  Database,
+  Cog,
   FileText,
-  GitBranch,
+  MessagesSquare,
   Shield,
-  Smartphone,
   Users,
+  Wrench,
 } from "lucide-react";
 import InfiniteMarquee from "@/components/ui/infinite-marquee";
 import ScrollReveal from "@/components/ui/scroll-reveal";
@@ -25,39 +25,41 @@ interface ServiceHighlight {
 const FEATURED_SERVICES: readonly ServiceHighlight[] = [
   {
     Icon: Code,
-    title: "Frontend moderno",
-    body: "Next.js, TypeScript y Tailwind. LCP bajo 1.5 s, accesibilidad AA, linting y CI incluidos.",
+    title: "Software a medida",
+    body: "Plataformas web y full-stack con React, TypeScript y Node. Pensadas para crecer y mantenerse, no solo para entregar.",
   },
   {
     Icon: BrainCircuit,
-    title: "Integración de IA",
-    body: "Agentes y RAG sobre Gemini o GPT. Empezamos con un caso concreto, no con un proyecto de investigación.",
+    title: "IA aplicada e investigación",
+    body: "Agentes, RAG y análisis de datos sobre casos concretos. Experiencia real en biomedicina: histopatología y señales EEG.",
   },
 ] as const;
 
 const COMPACT_SERVICES: readonly ServiceHighlight[] = [
   {
-    Icon: Database,
-    title: "Backend y APIs",
-    body: "Node, Python o Go. Documentación OpenAPI desde el día uno.",
+    Icon: CircuitBoard,
+    title: "Electrónica e IoT",
+    body: "Sistemas embebidos, microcontroladores y dispositivos conectados.",
   },
   {
-    Icon: Smartphone,
-    title: "Aplicaciones móviles",
-    body: "React Native o Flutter. Publicación en stores incluida.",
+    Icon: Cog,
+    title: "Automatización y robótica",
+    body: "Control, sensado y actuación para procesos industriales.",
   },
   {
-    Icon: Cloud,
-    title: "Cloud y DevOps",
-    body: "Terraform en AWS o GCP. Despliegues sin downtime.",
+    Icon: Wrench,
+    title: "Mantenimiento técnico",
+    body: "Equipos electromecánicos, industriales y biomédicos.",
   },
   {
     Icon: Shield,
     title: "Ciberseguridad",
-    body: "Auditorías OWASP y análisis estático en CI.",
+    body: "Auditorías OWASP, DevSecOps y endurecimiento práctico.",
   },
 ] as const;
 
+// PLACEHOLDER: cifras a confirmar — OhmRoyal recién digitaliza el negocio.
+// Referencia del sitio original: 8 años, 10 empresas, 80 proyectos.
 const STATS = [
   { value: "24/7", label: "Soporte técnico continuo" },
   { value: "+5", label: "Años de experiencia" },
@@ -67,24 +69,24 @@ const STATS = [
 
 const DIFFERENTIATORS = [
   {
-    Icon: GitBranch,
-    title: "Código bajo tu control",
-    body: "El repositorio, la infraestructura y los secretos quedan a tu nombre desde el primer commit. No hay dependencia técnica de nosotros para operar.",
+    Icon: Users,
+    title: "El especialista indicado",
+    body: "Cada problema lo atiende quien tiene trayectoria comprobada en esa área. No improvisamos fuera de nuestro terreno.",
   },
   {
     Icon: FileText,
-    title: "Decisiones documentadas",
-    body: "Cada decisión de arquitectura incluye el contexto, lo que descartamos y por qué. Tu equipo puede entender el sistema sin necesitar a quien lo construyó.",
+    title: "Proceso claro y por escrito",
+    body: "Alcance definido, hitos verificables y rango de inversión antes de empezar. Sin sorpresas de último momento.",
   },
   {
-    Icon: Users,
-    title: "Transferencia real",
-    body: "El proyecto no termina cuando sube el código. Hacemos hand-off en vivo: runbooks, accesos, pipelines y una sesión de preguntas con tu equipo.",
+    Icon: Shield,
+    title: "Si algo falla, respondemos",
+    body: "No desaparecemos al entregar. Damos soporte real y acompañamiento hasta que la solución funcione de verdad.",
   },
   {
-    Icon: Code,
-    title: "Demos antes que reportes",
-    body: "Cada semana mostramos algo que funciona. Preferimos que veas el avance en el browser antes que leer un estado en un documento.",
+    Icon: MessagesSquare,
+    title: "Hablas con quien ejecuta",
+    body: "El responsable técnico está en las llamadas contigo. Sin capas de intermediarios entre tú y el trabajo.",
   },
 ] as const;
 
@@ -96,13 +98,13 @@ const PHASES = [
   },
   {
     id: "02",
-    title: "Construcción",
-    body: "Sprints semanales con demo. Trabajamos en tu repositorio de GitHub desde el primer commit.",
+    title: "Ejecución",
+    body: "Avances frecuentes y demostrables. Te mostramos resultados reales, no solo reportes de estado.",
   },
   {
     id: "03",
     title: "Entrega",
-    body: "Infraestructura, secretos y runbooks transferidos. Sesión de hand-off para que tu equipo continúe.",
+    body: "Dejamos todo funcionando y documentado, con acompañamiento para que tu equipo continúe.",
   },
 ] as const;
 
@@ -114,25 +116,36 @@ export default function HomeSection() {
       {/* ──────────────────────── HERO — light editorial ──────────────────────── */}
       <section
         id="home-hero"
-        className="relative flex min-h-[calc(100vh-140px)] flex-col justify-center overflow-hidden bg-white pb-20 pt-32 sm:pb-24 sm:pt-40"
+        className="bg-ink-900 relative flex min-h-[calc(100vh-140px)] flex-col justify-center overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-24"
       >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: "radial-gradient(circle, oklch(0.963 0.013 145) 1px, transparent 1px)",
+            backgroundSize: "36px 36px",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="bg-brand-500/10 pointer-events-none absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full blur-[100px]"
+        />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h1 className="mb-6 font-display text-5xl font-semibold leading-[1.08] tracking-tight text-ink-900 sm:text-6xl lg:text-7xl">
-              Construimos el{" "}
-              <span className="text-brand-500">software</span>{" "}
-              que tu equipo va a operar después.
+            <h1 className="font-display mb-6 text-5xl leading-[1.08] font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Ingeniería aplicada, con el{" "}
+              <span className="text-brand-500">especialista correcto</span> para cada problema.
             </h1>
-            <p className="mb-10 max-w-2xl text-lg leading-relaxed text-ink-600 sm:text-xl">
-              Desarrollo web, móvil, IA y ciberseguridad para empresas que necesitan
-              sistemas mantenibles. Trabajas directo con quien escribe el código,
-              sin capas de intermediarios.
+            <p className="text-ink-400 mb-10 max-w-2xl text-lg leading-relaxed sm:text-xl">
+              Software, IA, electrónica, automatización y mantenimiento industrial. Reunimos
+              especialistas con trayectoria y asignamos a quien domina tu caso, con proceso claro y
+              resultados verificables.
             </p>
 
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/calcular-proyecto"
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3.5 text-sm font-medium text-white shadow-lg shadow-brand-500/20 transition-all duration-200 hover:bg-brand-600 hover:shadow-brand-600/25 active:scale-[0.97]"
+                className="bg-brand-500 shadow-brand-500/30 hover:bg-brand-600 hover:shadow-brand-600/35 inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-medium text-white shadow-lg transition-all duration-200 active:scale-[0.97]"
                 style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
               >
                 Calcular proyecto
@@ -140,7 +153,7 @@ export default function HomeSection() {
               </Link>
               <Link
                 href="/servicios"
-                className="inline-flex items-center gap-2 rounded-xl border border-ink-200 px-6 py-3.5 text-sm font-medium text-ink-900 transition-all duration-200 hover:border-ink-300 hover:bg-ink-50 active:scale-[0.97]"
+                className="border-ink-700 bg-ink-800 text-ink-100 hover:border-ink-600 hover:bg-ink-700 inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-medium transition-all duration-200 active:scale-[0.97]"
                 style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
               >
                 Ver servicios
@@ -154,29 +167,25 @@ export default function HomeSection() {
       <InfiniteMarquee />
 
       {/* ──────────────────────── SERVICES — 2 featured + 4 compact ──────────────────────── */}
-      <section
-        id="home-services"
-        aria-label="Servicios de ingeniería"
-        className="bg-white py-28"
-      >
+      <section id="home-services" aria-label="Servicios de ingeniería" className="bg-white py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <header className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <div className="max-w-xl space-y-3">
-                <span className="block font-mono text-xs font-bold uppercase tracking-widest text-brand-500">
+                <span className="text-brand-500 block font-mono text-xs font-bold tracking-widest uppercase">
                   Servicios de ingeniería
                 </span>
-                <h2 className="font-display text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
-                  Seis frentes. Un equipo.
+                <h2 className="font-display text-ink-900 text-4xl font-semibold tracking-tight sm:text-5xl">
+                  Seis frentes técnicos. El especialista correcto en cada uno.
                 </h2>
-                <p className="text-base leading-relaxed text-ink-600">
-                  No subcontratamos. La persona que diseña la arquitectura es la misma que
-                  escribe el código.
+                <p className="text-ink-600 text-base leading-relaxed">
+                  Software, electrónica, automatización, mantenimiento e IA. Cada área la atiende
+                  quien tiene trayectoria real en ella, no un generalista.
                 </p>
               </div>
               <Link
                 href="/servicios"
-                className="group inline-flex items-center gap-2 self-start text-sm font-medium text-ink-900 transition-colors hover:text-brand-600 md:self-end"
+                className="group text-ink-900 hover:text-brand-600 inline-flex items-center gap-2 self-start text-sm font-medium transition-colors md:self-end"
               >
                 Ver catálogo completo
                 <ArrowRight
@@ -191,16 +200,15 @@ export default function HomeSection() {
           <div className="mb-5 grid grid-cols-1 gap-5 md:grid-cols-2">
             {FEATURED_SERVICES.map(({ Icon, title, body }, idx) => (
               <ScrollReveal key={idx} delay={idx * 0.08}>
-                <div className="group rounded-2xl border border-ink-200 bg-ink-50 p-8 transition-all duration-300 hover:border-ink-300 hover:shadow-lg sm:p-10"
+                <div
+                  className="group border-ink-200 bg-ink-50 hover:border-ink-300 rounded-2xl border p-8 transition-all duration-300 hover:shadow-lg sm:p-10"
                   style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
                 >
-                  <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-500 transition-colors group-hover:bg-brand-500 group-hover:text-white">
+                  <span className="bg-brand-50 text-brand-500 group-hover:bg-brand-500 mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl transition-colors group-hover:text-white">
                     <Icon className="h-5 w-5" strokeWidth={1.5} />
                   </span>
-                  <h3 className="mb-2 font-display text-xl font-semibold text-ink-900">
-                    {title}
-                  </h3>
-                  <p className="max-w-md text-sm leading-relaxed text-ink-600">{body}</p>
+                  <h3 className="font-display text-ink-900 mb-2 text-xl font-semibold">{title}</h3>
+                  <p className="text-ink-600 max-w-md text-sm leading-relaxed">{body}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -210,16 +218,17 @@ export default function HomeSection() {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {COMPACT_SERVICES.map(({ Icon, title, body }, idx) => (
               <ScrollReveal key={idx} delay={idx * 0.06}>
-                <div className="group rounded-2xl border border-ink-200 bg-ink-50 p-6 transition-all duration-300 hover:border-ink-300 hover:shadow-md"
+                <div
+                  className="group border-ink-200 bg-ink-50 hover:border-ink-300 rounded-2xl border p-6 transition-all duration-300 hover:shadow-md"
                   style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
                 >
-                  <span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-ink-100 text-ink-700 transition-colors group-hover:bg-ink-900 group-hover:text-white">
+                  <span className="bg-ink-100 text-ink-700 group-hover:bg-ink-900 mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors group-hover:text-white">
                     <Icon className="h-4 w-4" strokeWidth={1.5} />
                   </span>
-                  <h3 className="mb-1 font-display text-base font-semibold text-ink-900">
+                  <h3 className="font-display text-ink-900 mb-1 text-base font-semibold">
                     {title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-ink-500">{body}</p>
+                  <p className="text-ink-500 text-sm leading-relaxed">{body}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -231,26 +240,26 @@ export default function HomeSection() {
       <section
         id="home-about"
         aria-label="Sobre nosotros"
-        className="border-t border-ink-100 bg-ink-50 py-28"
+        className="border-ink-100 bg-ink-50 border-t py-28"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <header className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl space-y-3">
-                <span className="block font-mono text-xs font-bold uppercase tracking-widest text-brand-500">
+                <span className="text-brand-500 block font-mono text-xs font-bold tracking-widest uppercase">
                   Sobre nosotros
                 </span>
-                <h2 className="font-display text-4xl font-semibold tracking-tight text-ink-900 sm:text-5xl">
-                  Construimos para que no dependas de nosotros.
+                <h2 className="font-display text-ink-900 text-4xl font-semibold tracking-tight sm:text-5xl">
+                  Por qué las empresas confían en nosotros.
                 </h2>
-                <p className="text-base leading-relaxed text-ink-600">
-                  El código, la infraestructura y el conocimiento quedan en tu equipo.
-                  Así es como trabajamos y por eso puedes confiarnos el proyecto completo.
+                <p className="text-ink-600 text-base leading-relaxed">
+                  Reunimos especialistas con trayectoria comprobada. Cada problema lo resuelve quien
+                  lo domina, con proceso claro y soporte hasta la entrega.
                 </p>
               </div>
               <Link
                 href="/nosotros"
-                className="group inline-flex items-center gap-2 self-start text-sm font-medium text-ink-900 transition-colors hover:text-brand-600 md:self-end"
+                className="group text-ink-900 hover:text-brand-600 inline-flex items-center gap-2 self-start text-sm font-medium transition-colors md:self-end"
               >
                 Conocer al equipo
                 <ArrowRight
@@ -266,16 +275,17 @@ export default function HomeSection() {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-span-7">
               {DIFFERENTIATORS.map(({ Icon, title, body }, idx) => (
                 <ScrollReveal key={idx} delay={idx * 0.07}>
-                  <div className="group h-full rounded-2xl border border-ink-200 bg-white p-6 transition-all duration-300 hover:border-ink-300 hover:shadow-md"
+                  <div
+                    className="group border-ink-200 hover:border-ink-300 h-full rounded-2xl border bg-white p-6 transition-all duration-300 hover:shadow-md"
                     style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
                   >
-                    <span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-500 transition-colors group-hover:bg-brand-500 group-hover:text-white">
+                    <span className="bg-brand-50 text-brand-500 group-hover:bg-brand-500 mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors group-hover:text-white">
                       <Icon className="h-4 w-4" strokeWidth={1.5} />
                     </span>
-                    <h3 className="mb-2 font-display text-base font-semibold text-ink-900">
+                    <h3 className="font-display text-ink-900 mb-2 text-base font-semibold">
                       {title}
                     </h3>
-                    <p className="text-sm leading-relaxed text-ink-500">{body}</p>
+                    <p className="text-ink-500 text-sm leading-relaxed">{body}</p>
                   </div>
                 </ScrollReveal>
               ))}
@@ -283,29 +293,29 @@ export default function HomeSection() {
 
             {/* Process timeline — the "how" — dark anchor card */}
             <ScrollReveal delay={0.1} className="lg:col-span-5">
-              <div className="flex h-full flex-col rounded-2xl bg-ink-900 p-8 sm:p-10">
-                <span className="block font-mono text-xs font-bold uppercase tracking-widest text-brand-400">
+              <div className="bg-ink-900 flex h-full flex-col rounded-2xl p-8 sm:p-10">
+                <span className="text-brand-400 block font-mono text-xs font-bold tracking-widest uppercase">
                   Cómo trabajamos
                 </span>
-                <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight text-white">
+                <h3 className="font-display mt-3 text-2xl font-semibold tracking-tight text-white">
                   Tres fases. Alcance escrito desde el inicio.
                 </h3>
                 <ol className="mt-8 space-y-7">
                   {PHASES.map((phase, idx) => (
                     <li key={phase.id} className="relative flex gap-5">
                       <div className="flex flex-col items-center">
-                        <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-brand-500 font-display text-sm font-bold text-white">
+                        <span className="bg-brand-500 font-display flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold text-white">
                           {phase.id}
                         </span>
                         {idx < PHASES.length - 1 && (
-                          <span className="mt-2 w-px flex-1 bg-ink-700" aria-hidden="true" />
+                          <span className="bg-ink-700 mt-2 w-px flex-1" aria-hidden="true" />
                         )}
                       </div>
                       <div className="space-y-1.5 pb-1">
                         <h4 className="font-display text-base font-semibold text-white">
                           {phase.title}
                         </h4>
-                        <p className="text-sm leading-relaxed text-ink-400">{phase.body}</p>
+                        <p className="text-ink-400 text-sm leading-relaxed">{phase.body}</p>
                       </div>
                     </li>
                   ))}
@@ -317,23 +327,19 @@ export default function HomeSection() {
       </section>
 
       {/* ──────────────────────── STATS — premium dark mode ──────────────────────── */}
-      <section
-        id="home-stats"
-        aria-label="OhmRoyal en cifras"
-        className="bg-ink-900"
-      >
+      <section id="home-stats" aria-label="OhmRoyal en cifras" className="bg-ink-900">
         <div className="mx-auto max-w-7xl">
           <div className="pt-16 text-center">
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-brand-500">
+            <span className="text-brand-500 font-mono text-xs font-bold tracking-widest uppercase">
               OhmRoyal en cifras
             </span>
           </div>
-          <dl className="mt-8 grid grid-cols-2 divide-x divide-y divide-ink-800 border-y border-ink-800 lg:grid-cols-4 lg:divide-y-0">
+          <dl className="divide-ink-800 border-ink-800 mt-8 grid grid-cols-2 divide-x divide-y border-y lg:grid-cols-4 lg:divide-y-0">
             {STATS.map((stat, i) => (
               <ScrollReveal key={i} delay={i * 0.06}>
-                <div className="flex flex-col gap-2 px-8 py-12 text-center transition-colors duration-300 hover:bg-ink-800/50">
-                  <dt className="order-2 text-sm leading-relaxed text-ink-400">{stat.label}</dt>
-                  <dd className="order-1 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                <div className="hover:bg-ink-800/50 flex flex-col gap-2 px-8 py-12 text-center transition-colors duration-300">
+                  <dt className="text-ink-400 order-2 text-sm leading-relaxed">{stat.label}</dt>
+                  <dd className="font-display order-1 text-4xl font-bold tracking-tight text-white sm:text-5xl">
                     {stat.value}
                   </dd>
                 </div>
@@ -345,25 +351,21 @@ export default function HomeSection() {
 
       {/* ──────────────────────── BLOG TEASER ──────────────────────── */}
       {featured && secondary && tertiary && (
-        <section
-          id="home-blog"
-          aria-label="Artículos del blog"
-          className="bg-ink-50 py-28"
-        >
+        <section id="home-blog" aria-label="Artículos del blog" className="bg-ink-50 py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ScrollReveal>
               <header className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                 <div className="max-w-xl space-y-3">
-                  <span className="block font-mono text-xs font-bold uppercase tracking-widest text-brand-500">
+                  <span className="text-brand-500 block font-mono text-xs font-bold tracking-widest uppercase">
                     Artículos
                   </span>
-                  <h2 className="font-display text-3xl font-semibold tracking-tight text-ink-900 sm:text-4xl">
+                  <h2 className="font-display text-ink-900 text-3xl font-semibold tracking-tight sm:text-4xl">
                     Notas sobre lo que escribimos, rompemos y arreglamos.
                   </h2>
                 </div>
                 <Link
                   href="/blog"
-                  className="group inline-flex items-center gap-2 self-start text-sm font-medium text-ink-900 transition-colors hover:text-brand-600 md:self-end"
+                  className="group text-ink-900 hover:text-brand-600 inline-flex items-center gap-2 self-start text-sm font-medium transition-colors md:self-end"
                 >
                   Ver todos
                   <ArrowRight
@@ -379,27 +381,27 @@ export default function HomeSection() {
               <ScrollReveal className="lg:col-span-7">
                 <Link
                   href={`/blog/${featured.slug}`}
-                  className="group relative flex h-full min-h-[500px] flex-col justify-end overflow-hidden rounded-3xl border border-ink-800 bg-ink-900 p-8 sm:p-10"
+                  className="group border-ink-800 bg-ink-900 relative flex h-full min-h-[500px] flex-col justify-end overflow-hidden rounded-3xl border p-8 sm:p-10"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/20 to-transparent transition-opacity duration-300 group-hover:opacity-90" />
-                  
+                  <div className="from-ink-900/90 via-ink-900/20 absolute inset-0 bg-gradient-to-t to-transparent transition-opacity duration-300 group-hover:opacity-90" />
+
                   <div className="relative z-10 space-y-4">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="rounded-full bg-brand-500 px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider text-white shadow-sm">
+                      <span className="bg-brand-500 rounded-full px-3 py-1 font-mono text-xs font-bold tracking-wider text-white uppercase shadow-sm">
                         {featured.category}
                       </span>
-                      <span className="font-mono text-xs font-medium text-ink-300">
+                      <span className="text-ink-300 font-mono text-xs font-medium">
                         {featured.readTime} · {featured.date}
                       </span>
                     </div>
-                    <h3 className="font-display text-3xl font-semibold leading-snug tracking-tight text-white transition-colors sm:text-4xl">
+                    <h3 className="font-display text-3xl leading-snug font-semibold tracking-tight text-white transition-colors sm:text-4xl">
                       {featured.title}
                     </h3>
-                    <p className="line-clamp-2 text-base leading-relaxed text-ink-200">
+                    <p className="text-ink-200 line-clamp-2 text-base leading-relaxed">
                       {featured.excerpt}
                     </p>
                     <div className="pt-2">
-                      <span className="inline-flex items-center gap-2 text-sm font-medium text-white group-hover:text-brand-300">
+                      <span className="group-hover:text-brand-300 inline-flex items-center gap-2 text-sm font-medium text-white">
                         Leer artículo completo
                         <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
                       </span>
@@ -413,17 +415,17 @@ export default function HomeSection() {
                 {/* Top Right Card - Light */}
                 <Link
                   href={`/blog/${secondary.slug}`}
-                  className="group flex flex-1 flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-ink-200 bg-white p-8 sm:p-10"
+                  className="group border-ink-200 flex flex-1 flex-col justify-between gap-6 overflow-hidden rounded-3xl border bg-white p-8 sm:p-10"
                 >
                   <div className="space-y-4">
-                    <span className="block font-mono text-xs font-bold uppercase tracking-widest text-brand-500">
+                    <span className="text-brand-500 block font-mono text-xs font-bold tracking-widest uppercase">
                       {secondary.category}
                     </span>
-                    <h3 className="font-display text-2xl font-semibold leading-snug tracking-tight text-ink-900 transition-colors">
+                    <h3 className="font-display text-ink-900 text-2xl leading-snug font-semibold tracking-tight transition-colors">
                       {secondary.title}
                     </h3>
                   </div>
-                  <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-600 group-hover:text-brand-700">
+                  <span className="text-brand-600 group-hover:text-brand-700 inline-flex items-center gap-2 text-sm font-medium">
                     Leer artículo
                     <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
                   </span>
@@ -432,17 +434,17 @@ export default function HomeSection() {
                 {/* Bottom Right Card - Dark */}
                 <Link
                   href={`/blog/${tertiary.slug}`}
-                  className="group flex flex-1 flex-col justify-between gap-6 overflow-hidden rounded-3xl border border-ink-800 bg-ink-900 p-8 sm:p-10"
+                  className="group border-ink-800 bg-ink-900 flex flex-1 flex-col justify-between gap-6 overflow-hidden rounded-3xl border p-8 sm:p-10"
                 >
                   <div className="space-y-4">
-                    <span className="block font-mono text-xs font-bold uppercase tracking-widest text-brand-500">
+                    <span className="text-brand-500 block font-mono text-xs font-bold tracking-widest uppercase">
                       {tertiary.category}
                     </span>
-                    <h3 className="font-display text-2xl font-semibold leading-snug tracking-tight text-white transition-colors">
+                    <h3 className="font-display text-2xl leading-snug font-semibold tracking-tight text-white transition-colors">
                       {tertiary.title}
                     </h3>
                   </div>
-                  <span className="inline-flex items-center gap-2 text-sm font-medium text-white group-hover:text-brand-300">
+                  <span className="group-hover:text-brand-300 inline-flex items-center gap-2 text-sm font-medium text-white">
                     Leer artículo
                     <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
                   </span>
@@ -454,26 +456,22 @@ export default function HomeSection() {
       )}
 
       {/* ──────────────────────── CTA — contained dark card ──────────────────────── */}
-      <section
-        id="home-cta"
-        aria-label="Contacto"
-        className="bg-ink-50 px-4 pb-28 sm:px-6 lg:px-8"
-      >
+      <section id="home-cta" aria-label="Contacto" className="bg-ink-50 px-4 pb-28 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <ScrollReveal direction="fade">
-            <div className="relative overflow-hidden rounded-3xl bg-ink-900 px-6 py-16 text-center sm:px-12 sm:py-24">
+            <div className="bg-ink-900 relative overflow-hidden rounded-3xl px-6 py-16 text-center sm:px-12 sm:py-24">
               <div className="relative">
-                <h2 className="mx-auto max-w-2xl font-display text-3xl font-semibold tracking-tight text-white sm:text-5xl">
+                <h2 className="font-display mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-5xl">
                   Cuéntanos qué problema quieres resolver.
                 </h2>
-                <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ink-400">
+                <p className="text-ink-400 mx-auto mt-4 max-w-xl text-base leading-relaxed">
                   Una videollamada de 30 minutos para definir alcance, presupuesto y un punto de
                   inicio realista. Sin presentación corporativa.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
                   <Link
                     href="/calcular-proyecto"
-                    className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3.5 text-sm font-medium text-white shadow-lg shadow-brand-500/30 transition-all duration-200 hover:bg-brand-600 hover:shadow-brand-600/35 active:scale-[0.97]"
+                    className="bg-brand-500 shadow-brand-500/30 hover:bg-brand-600 hover:shadow-brand-600/35 inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-medium text-white shadow-lg transition-all duration-200 active:scale-[0.97]"
                     style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
                   >
                     Calcular proyecto
@@ -481,7 +479,7 @@ export default function HomeSection() {
                   </Link>
                   <Link
                     href="/servicios"
-                    className="inline-flex items-center gap-2 rounded-xl border border-ink-700 bg-ink-800 px-6 py-3.5 text-sm font-medium text-ink-100 transition-colors duration-200 hover:border-ink-600 hover:bg-ink-700"
+                    className="border-ink-700 bg-ink-800 text-ink-100 hover:border-ink-600 hover:bg-ink-700 inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-medium transition-colors duration-200"
                   >
                     Ver servicios
                   </Link>

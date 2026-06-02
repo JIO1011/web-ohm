@@ -4,7 +4,7 @@ import ServicesSection from "@/features/services/services-section";
 export const metadata: Metadata = {
   title: "Servicios",
   description:
-    "Catálogo de servicios de OhmRoyal: Frontend, Backend, IA, Mobile, UI/UX, QA, Cloud y Ciberseguridad.",
+    "Catálogo de OhmRoyal: software, IA, ciberseguridad, electrónica e IoT, automatización, mantenimiento industrial y biomédico, diseño 3D y fabricación mecánica.",
 };
 
 export default function ServiciosPage() {

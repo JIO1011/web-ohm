@@ -4,7 +4,7 @@ import AboutSection from "@/features/about/about-section";
 export const metadata: Metadata = {
   title: "Nosotros",
   description:
-    "Equipo, misión y certificaciones de OhmRoyal — agencia de software premium en LATAM.",
+    "OhmRoyal: una red de especialistas técnicos en Quito, Ecuador. Equipo, misión y visión en software, electrónica, automatización y mantenimiento industrial.",
 };
 
 export default function NosotrosPage() {

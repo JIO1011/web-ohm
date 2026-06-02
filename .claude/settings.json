@@ -6,7 +6,15 @@
       "Skill(impeccable)",
       "Skill(impeccable:*)",
       "Bash(node /home/jio/Documentos/web-ohm/.claude/skills/impeccable/scripts/load-context.mjs)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "WebFetch(domain:www.ohmroyal.org)",
+      "WebSearch",
+      "Bash(curl -sL --max-time 25 https://www.ohmroyal.org/proyectos -o ohm_proyectos.html)",
+      "Bash(curl -sL --max-time 30 https://www.ohmroyal.org/assets/index-Dm6k6o5E.js -o ohm.js)",
+      "Bash(python3 -)",
+      "Bash(grep -aoE \"certificat[a-zA-Z]*[^,;{}]{0,400}\" /tmp/ohm.js)",
+      "Bash(grep -aoE \".{0,80}certificates:\\\\[.{0,600}\" /tmp/ohm.js)",
+      "Bash(git add *)"
     ]
   }
 }
