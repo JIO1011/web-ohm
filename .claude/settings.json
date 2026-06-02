@@ -14,7 +14,8 @@
       "Bash(python3 -)",
       "Bash(grep -aoE \"certificat[a-zA-Z]*[^,;{}]{0,400}\" /tmp/ohm.js)",
       "Bash(grep -aoE \".{0,80}certificates:\\\\[.{0,600}\" /tmp/ohm.js)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
