@@ -15,7 +15,10 @@
       "Bash(grep -aoE \"certificat[a-zA-Z]*[^,;{}]{0,400}\" /tmp/ohm.js)",
       "Bash(grep -aoE \".{0,80}certificates:\\\\[.{0,600}\" /tmp/ohm.js)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(npm --version)",
+      "Bash(bash .husky/pre-commit)",
+      "Bash(git commit -m 'fix: replace npx with direct bin path in pre-commit hook *)"
     ]
   }
 }
