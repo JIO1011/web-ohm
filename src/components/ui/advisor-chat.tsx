@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { MessageSquare, X, Send, Cpu, Bot, User, Hourglass } from "lucide-react";
+import { MessageSquare, X, Send, Bot, User, Hourglass } from "lucide-react";
+import Image from "next/image";
 import type { ChatMessage } from "@/types";
 
 const SUGGESTED_QUESTIONS = [
@@ -129,8 +130,8 @@ export default function AdvisorChat() {
                   id="crysta-avatar-bg"
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-brand-600 to-brand-500 p-0.5 shadow-sm"
                 >
-                  <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
-                    <Cpu className="h-5 w-5 animate-pulse text-brand-600" />
+                  <div className="flex h-full w-full overflow-hidden rounded-full bg-white p-1">
+                    <Image src="/logo.webp" alt="OhmRoyal" width={32} height={32} className="h-full w-full animate-pulse object-contain" />
                   </div>
                 </div>
                 <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />

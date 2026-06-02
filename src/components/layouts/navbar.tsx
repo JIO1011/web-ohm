@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ArrowUpRight, Cpu } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 const navItems = [
   { href: "/", label: "Inicio" },
@@ -13,8 +14,7 @@ const navItems = [
   { href: "/blog", label: "Blog" },
 ] as const;
 
-/* All pages now have dark navy heroes — navbar starts dark and transitions to light on scroll */
-const ALL_ROUTES_DARK_HERO = true;
+/* Hero is light — navbar always uses dark text */
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -32,19 +32,16 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const isDarkHero = ALL_ROUTES_DARK_HERO && !isScrolled;
-
   const navBgClass = !isScrolled
     ? "bg-transparent py-5"
-    : "border-b border-ink-200/80 bg-ink-0/95 py-4 shadow-sm backdrop-blur-md";
+    : "border-b border-ink-200/80 bg-white/95 py-4 shadow-sm backdrop-blur-md";
 
   const linkColor = (active: boolean): string => {
     if (active) return "text-brand-500 font-semibold";
-    if (isDarkHero) return "text-ink-300 hover:text-ink-0";
     return "text-ink-600 hover:text-ink-900";
   };
 
-  const logoColor = isDarkHero ? "text-ink-0" : "text-ink-900";
+  const logoColor = "text-ink-900";
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
@@ -59,8 +56,8 @@ export default function Navbar() {
             href="/"
             className={`flex cursor-pointer items-center gap-2 text-xl font-semibold tracking-tight focus:outline-none ${logoColor}`}
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 shadow-md shadow-brand-500/30">
-              <Cpu className="h-4 w-4 text-white" strokeWidth={1.75} />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden">
+              <Image src="/logo.webp" alt="OhmRoyal" width={32} height={32} className="h-full w-full object-contain" />
             </div>
             <span className="font-display">
               Ohm<span className="font-bold text-brand-500">Royal</span>
@@ -89,7 +86,8 @@ export default function Navbar() {
             <Link
               id="nav-cta-calcular-proyecto"
               href="/calcular-proyecto"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-medium text-white shadow-md shadow-brand-500/25 transition-all hover:bg-brand-600 hover:shadow-brand-600/30 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-medium text-white shadow-md shadow-brand-500/20 transition-all duration-200 hover:bg-brand-600 hover:shadow-brand-600/25 active:scale-[0.97]"
+              style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
             >
               <span>Calcular Proyecto</span>
               <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2} />
@@ -106,9 +104,9 @@ export default function Navbar() {
               className="rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               {isMobileMenuOpen ? (
-                <X className={`h-6 w-6 ${isDarkHero ? "text-ink-0" : "text-ink-900"}`} strokeWidth={1.75} />
+                <X className="h-6 w-6 text-ink-900" strokeWidth={1.75} />
               ) : (
-                <Menu className={`h-6 w-6 ${isDarkHero ? "text-ink-0" : "text-ink-900"}`} strokeWidth={1.75} />
+                <Menu className="h-6 w-6 text-ink-900" strokeWidth={1.75} />
               )}
             </button>
           </div>

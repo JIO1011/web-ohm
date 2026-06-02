@@ -38,6 +38,10 @@ export const metadata: Metadata = {
     title: `${APP_NAME} | Ingeniería de Software`,
     description: APP_DESC,
   },
+  icons: {
+    icon: "/logo.webp",
+    apple: "/logo.webp",
+  },
   robots: { index: true, follow: true },
 };
 

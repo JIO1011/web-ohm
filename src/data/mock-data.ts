@@ -258,78 +258,78 @@ export const caseStudies: CaseStudy[] = [
 export const blogPosts: BlogPost[] = [
   {
     id: "kubernetes-scaling",
-    title: "Cómo escalar aplicaciones a millones de usuarios con Kubernetes de forma óptima",
+    title: "HPA en Kubernetes: más allá de la CPU como única métrica de escala",
     slug: "como-escalar-aplicaciones-kubernetes",
     category: "Cloud & DevOps",
     author: {
       name: "Alejandro Ruiz",
-      role: "Lead DevOps Specialist",
+      role: "DevOps Engineer",
       avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-05-18",
     readTime: "6 min",
     excerpt:
-      "Conoce las pautas técnicas sobre HPA, límites de recursos y optimización de redes que usan las mejores empresas para evitar caídas catastróficas del microservicio.",
+      "Escalar por CPU funciona hasta cierto punto. Cuando la latencia sube y la CPU no, el autoscaler no reacciona. Cómo configurar métricas personalizadas en HPA para cubrir esos casos.",
     content:
-      "Escalar una aplicación no consiste simplemente en instanciar más servidores. En este artículo detallamos cómo configurar el Horizontal Pod Autoscaler de Kubernetes basándonos no solo en uso de CPU de forma simplista, sino en métricas personalizadas como latencia de consulta, conexiones activas de colas en Redis e hilos activos de HTTP. Veremos cómo estructurar los límites de recursos de CPU y Memoria (Limits y Requests) de manera balanceada para evitar interrupciones por OOMKilled de nodos físicos críticos...",
+      "Escalar una aplicación no consiste simplemente en instanciar más servidores. En este artículo detallamos cómo configurar el Horizontal Pod Autoscaler de Kubernetes basándonos no solo en uso de CPU, sino en métricas personalizadas como latencia de consulta, conexiones activas en Redis e hilos activos de HTTP. Veremos cómo estructurar los límites de recursos de CPU y Memoria (Limits y Requests) para evitar interrupciones por OOMKilled, y qué herramientas de observabilidad ayudan a tomar esas decisiones con datos reales...",
     tags: ["Kubernetes", "CI/CD", "AWS", "Docker"],
     likes: 124,
   },
   {
     id: "ia-trends-2026",
-    title: "Tendencias de IA Generativa en 2026: Agentes Autónomos y Arquitectura RAG Avanzada",
+    title: "Lo que aprendimos construyendo agentes RAG en producción durante 2025",
     slug: "tendencias-ia-2026-agentes-autonomos",
     category: "IA y Machine Learning",
     author: {
-      name: "Dra. Sofía Castillo",
-      role: "AI & ML Clinical Director",
+      name: "Sofía Castillo",
+      role: "ML Engineer",
       avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-04-30",
     readTime: "8 min",
     excerpt:
-      "Los chatbots sencillos del pasado han muerto. Analizamos cómo los frameworks de agentes cooperativos y arquitecturas avanzadas RAG redefinen el ROI de la tecnología corporativa.",
+      "Los primeros prototipos RAG eran rápidos de construir y difíciles de mantener. Estas son las decisiones de diseño que más impacto tuvieron en proyectos reales.",
     content:
-      "La adopción empresarial de la Inteligencia Artificial se encuentra en el año de los agentes de software funcionales. Hoy, las compañías no desean un chat estático que responda preguntas generales; exigen ecosistemas que decidan qué software invocar, realicen transacciones financieras validadas, resuelvan conflictos geográficos y actualicen inventories con total certidumbre. Evaluamos las mejores prácticas para estructurar bases de datos vectoriales en clusters distribuidos, asegurar una filtración limpia de ruidos (clean embedding buffers) y limitar alucinaciones mediante grounding riguroso...",
-    tags: ["AI Generativa", "LLMs", "Pinecone", "Machine Learning"],
+      "Construir un prototipo RAG es relativamente rápido. Llevarlo a producción con latencia aceptable, costos predecibles y resultados verificables es otra historia. En este artículo repasamos las decisiones que más cambiaron los resultados en proyectos reales: cómo estructurar el chunking, qué estrategias de reranking valen la pena, cuándo conviene caching de embeddings, y cómo medir precisión sin necesitar un equipo de evaluación dedicado...",
+    tags: ["IA Generativa", "LLMs", "Pinecone", "Machine Learning"],
     likes: 247,
   },
   {
     id: "nextjs-architectures",
-    title: "Arquitecturas modernas de alto rendimiento con Next.js 15 y Tailwind CSS v4",
+    title: "Server Components en Next.js 15: cuándo aportan y cuándo complican",
     slug: "arquitecturas-modernas-nextjs-15-tailwind-v4",
     category: "Desarrollo Web",
     author: {
       name: "Mauricio Fernández",
-      role: "Principal Frontend Engineer",
+      role: "Frontend Engineer",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-03-12",
     readTime: "5 min",
     excerpt:
-      "Un recorrido práctico por las nuevas directivas del motor de compilación CSS y de carga ultra optimizada de templates en el nuevo stack corporativo de Vercel.",
+      "Server Components resuelven problemas reales de carga inicial y SEO. También introducen restricciones que no siempre valen el tradeoff. Cuándo usarlos y cuándo no.",
     content:
-      "Next.js 15 ha estabilizado la renderización asíncrona de layouts y el paso de rutas dinámicas híbridas de caché. En OhmRoyal, combinamos este control con la velocidad de la nueva suite integrada Tailwind CSS v4, que descarta PostCSS y compila directamente en lenguaje nativo de CSS nativo optimizado del navegador. En esta entrega técnica mostramos cómo estructurar componentes dinámicos con React Suspense, cómo predecir la carga de páginas mediante prefetching adaptativo inteligente y cómo reducir el peso final de los bundles Javascript un 30%...",
+      "Next.js 15 estabilizó la renderización asíncrona de layouts con React 19. En la práctica, Server Components reducen el bundle del cliente y mejoran el tiempo a primer byte, pero agregan fricción cuando necesitas estado interactivo o contexto compartido. En este artículo mostramos los patrones que más usamos, los errores de hidratación más frecuentes que encontramos, y cómo estructuramos la frontera entre server y client para mantener el código manejable...",
     tags: ["Next.js", "Tailwind CSS", "React", "Frontend"],
     likes: 189,
   },
   {
     id: "api-security-hardening",
-    title: "Guía definitiva para endurecer la seguridad de tus APIs contra ataques lógicos",
+    title: "BOLA en APIs: el fallo de autorización que más encontramos en auditorías",
     slug: "guia-seguridad-apis-modernas",
     category: "Ciberseguridad",
     author: {
       name: "Carlos Mendoza",
-      role: "Cybersecurity Architect",
+      role: "Security Engineer",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-02-25",
     readTime: "7 min",
     excerpt:
-      "Los firewalls ya no son suficientes. Descubre cómo las vulnerabilidades del tipo BOLA (Broken Object Level Authorization) exponen tus bases de datos corporativas sin que te des cuenta.",
+      "Broken Object Level Authorization aparece en casi todas las APIs que auditamos. No es un bug exótico: es un patrón que se instala solo cuando la autorización se añade después del diseño.",
     content:
-      "El tráfico web actual de microservicios está regido por APIs. Sin embargo, más del 70% de las brechas de seguridad fintech recientes involucran fallos lógicos graves que pasan desapercibidos ante análisis estáticos comunes de puertos. En este análisis cubrimos técnicas avanzadas de prevención: validación estricta de Claims en JSON Web Tokens (JWT), restricción de inyecciones SQL mediante tipación forzada en Orquestadores de Modelaje ORM, rate limiting adaptativo con algoritmos Token Bucket en Redis y auditoría automática de dependencias de terceros...",
-    tags: ["Cybersecurity", "OWASP", "APIs", "Security"],
+      "BOLA (Broken Object Level Authorization) es el fallo más común que encontramos en auditorías de APIs internas. El problema no es técnico en el sentido clásico: el código funciona, los tests pasan, pero cualquier usuario autenticado puede acceder a recursos de otro usuario cambiando un ID en la URL. En este artículo explicamos por qué ocurre, cómo detectarlo con pruebas automatizadas, y cómo estructurar la validación de autorización a nivel de objeto para que el patrón sea difícil de omitir...",
+    tags: ["Ciberseguridad", "OWASP", "APIs", "Seguridad"],
     likes: 156,
   },
 ];

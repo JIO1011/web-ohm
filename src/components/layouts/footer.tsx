@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, Cpu } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 
 const servicesLinks = [
   { label: "Frontend moderno", href: "/servicios" },
@@ -26,8 +27,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12">
           <div className="space-y-5 lg:col-span-4">
             <div className="flex items-center gap-2.5 text-lg font-semibold text-ink-0">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 shadow-md shadow-brand-500/30">
-                <Cpu className="h-4 w-4 text-white" strokeWidth={1.75} />
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden">
+                <Image src="/logo.webp" alt="OhmRoyal" width={32} height={32} className="h-full w-full object-contain" />
               </span>
               <span className="font-display">
                 Ohm<span className="font-bold text-brand-400">Royal</span>
