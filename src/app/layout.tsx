@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layouts/navbar";
 import Footer from "@/components/layouts/footer";
 import AdvisorChat from "@/components/ui/advisor-chat";
+import SiteShell from "@/components/layouts/site-shell";
 import { env } from "@/lib/env";
 
 const APP_NAME = "OhmRoyal";
@@ -60,16 +61,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Grotesk:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Grotesk:wght@400;500;700;900&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
         />
       </head>
-      <body className="relative min-h-screen bg-ink-0 font-sans text-ink-900 selection:bg-brand-100 selection:text-brand-900">
-        <Navbar />
-        <main id="main-content-flow" className="min-h-screen">
+      <body className="bg-ink-0 text-ink-900 selection:bg-brand-100 selection:text-brand-900 relative min-h-screen font-sans">
+        <SiteShell navbar={<Navbar />} footer={<Footer />} advisor={<AdvisorChat />}>
           {children}
-        </main>
-        <Footer />
-        <AdvisorChat />
+        </SiteShell>
       </body>
     </html>
   );

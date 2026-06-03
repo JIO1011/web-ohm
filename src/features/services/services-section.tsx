@@ -196,8 +196,13 @@ export default function ServicesSection() {
   const active: Service = servicesData.find((svc) => svc.id === selectedServiceId) ?? firstService;
 
   const goToBudget = (preset?: string) => {
-    const search = preset ? `?service=${encodeURIComponent(preset)}` : "";
-    router.push(`/calcular-proyecto${search}`);
+    // With a chosen service, deep-link straight to the wizard with the preset.
+    // Without one, land on the hub so the user picks a tool.
+    if (preset) {
+      router.push(`/calcular-proyecto/presupuestador?service=${encodeURIComponent(preset)}`);
+    } else {
+      router.push("/calcular-proyecto");
+    }
   };
 
   return (

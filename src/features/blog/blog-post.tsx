@@ -7,16 +7,8 @@ import { ArrowLeft, ArrowRight, Check, Clock, Heart, Share2 } from "lucide-react
 import type { BlogPost } from "@/types";
 import { getPostPalette } from "./blog-images";
 
-const CATEGORY_BADGE: Record<string, string> = {
-  "IA y Machine Learning": "bg-blue-500 text-white",
-  "Cloud & DevOps":        "bg-amber-500 text-ink-900",
-  "Desarrollo Web":        "bg-blue-600 text-white",
-  "Ciberseguridad":        "bg-brand-600 text-white",
-};
-
-function getCategoryBadge(category: string): string {
-  return CATEGORY_BADGE[category] ?? "bg-ink-700 text-ink-0";
-}
+/* Neutral badge — category color lives in the cover gradient (PostHero), not the badge. */
+const BADGE_ON_SURFACE = "bg-ink-900 text-white";
 
 function PostHero({ id }: { id: string }) {
   const palette = getPostPalette(id);
@@ -29,15 +21,15 @@ function PostHero({ id }: { id: string }) {
       }}
     >
       <span
-        className="absolute -bottom-16 -right-16 h-52 w-52 rounded-full"
+        className="absolute -right-16 -bottom-16 h-52 w-52 rounded-full"
         style={{ backgroundColor: palette.accent, opacity: 0.4, filter: "blur(55px)" }}
       />
       <span
-        className="absolute right-8 top-8 h-3 w-3 rounded-full"
+        className="absolute top-8 right-8 h-3 w-3 rounded-full"
         style={{ backgroundColor: palette.accent, opacity: 0.85 }}
       />
       <span
-        className="absolute right-14 top-14 h-1.5 w-1.5 rounded-full"
+        className="absolute top-14 right-14 h-1.5 w-1.5 rounded-full"
         style={{ backgroundColor: palette.accent, opacity: 0.5 }}
       />
     </div>
@@ -67,11 +59,11 @@ export default function BlogPostView({ post }: { post: BlogPost }) {
   };
 
   return (
-    <div className="bg-ink-0 pb-24 pt-28 text-ink-900 md:pt-36">
+    <div className="bg-ink-0 text-ink-900 pt-28 pb-24 md:pt-36">
       <article className="mx-auto max-w-3xl space-y-8 px-4 sm:px-6 lg:px-8">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-600 transition-colors hover:text-blue-600"
+          className="text-ink-600 hover:text-brand-600 inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
         >
           <ArrowLeft className="h-4 w-4" strokeWidth={1.75} />
           Volver al blog
@@ -81,24 +73,26 @@ export default function BlogPostView({ post }: { post: BlogPost }) {
 
         <header className="space-y-5">
           <div className="flex flex-wrap items-center gap-3">
-            <span className={`rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider ${getCategoryBadge(post.category)}`}>
+            <span
+              className={`rounded-full px-3 py-1 font-mono text-xs font-bold tracking-wider uppercase ${BADGE_ON_SURFACE}`}
+            >
               {post.category}
             </span>
-            <span className="flex items-center gap-1 font-mono text-xs text-ink-500">
+            <span className="text-ink-500 flex items-center gap-1 font-mono text-xs">
               <Clock className="h-3 w-3" strokeWidth={1.75} />
               {post.readTime} de lectura
             </span>
-            <span className="font-mono text-xs text-ink-500">{post.date}</span>
+            <span className="text-ink-500 font-mono text-xs">{post.date}</span>
           </div>
 
-          <h1 className="font-display text-3xl font-semibold leading-tight tracking-tight text-ink-900 sm:text-4xl lg:text-[2.75rem]">
+          <h1 className="font-display text-ink-900 text-3xl leading-tight font-semibold tracking-tight sm:text-4xl lg:text-[2.75rem]">
             {post.title}
           </h1>
 
-          <div className="flex items-center justify-between border-y border-ink-200 py-4">
+          <div className="border-ink-200 flex items-center justify-between border-y py-4">
             <div className="space-y-0.5">
-              <p className="text-sm font-semibold text-ink-900">{post.author.name}</p>
-              <p className="text-xs text-ink-500">{post.author.role}</p>
+              <p className="text-ink-900 text-sm font-semibold">{post.author.name}</p>
+              <p className="text-ink-500 text-xs">{post.author.role}</p>
             </div>
             <div className="flex items-center gap-2.5">
               <button
@@ -111,19 +105,22 @@ export default function BlogPostView({ post }: { post: BlogPost }) {
                     : "border-ink-200 text-ink-600 hover:border-brand-300"
                 }`}
               >
-                <Heart className={`h-3.5 w-3.5 ${hasLiked ? "fill-current" : ""}`} strokeWidth={1.5} />
+                <Heart
+                  className={`h-3.5 w-3.5 ${hasLiked ? "fill-current" : ""}`}
+                  strokeWidth={1.5}
+                />
                 <span className="font-mono text-xs">{likes}</span>
               </button>
               <button
                 type="button"
                 onClick={handleShare}
                 aria-label="Copiar enlace"
-                className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 px-3 py-1.5 text-sm text-ink-600 transition-colors hover:border-blue-300 hover:text-blue-600"
+                className="border-ink-200 text-ink-600 hover:border-brand-300 hover:text-brand-600 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors"
               >
                 {copied ? (
                   <>
-                    <Check className="h-3.5 w-3.5 text-blue-600" strokeWidth={2} />
-                    <span className="font-mono text-xs text-blue-600">Copiado</span>
+                    <Check className="text-brand-600 h-3.5 w-3.5" strokeWidth={2} />
+                    <span className="text-brand-600 font-mono text-xs">Copiado</span>
                   </>
                 ) : (
                   <>
@@ -137,36 +134,36 @@ export default function BlogPostView({ post }: { post: BlogPost }) {
         </header>
 
         <div className="space-y-6">
-          <p className="font-display text-xl leading-relaxed text-ink-800">{post.excerpt}</p>
-          <div className="whitespace-pre-wrap text-base leading-relaxed text-ink-700">
+          <p className="font-display text-ink-800 text-xl leading-relaxed">{post.excerpt}</p>
+          <div className="text-ink-700 text-base leading-relaxed whitespace-pre-wrap">
             {post.content}
           </div>
         </div>
 
-        <aside className="rounded-2xl border border-blue-200 bg-blue-50 p-6 sm:p-8">
-          <p className="font-mono text-xs font-semibold uppercase tracking-wider text-blue-600">
+        <aside className="border-ink-200 bg-ink-50 rounded-2xl border p-6 sm:p-8">
+          <p className="text-brand-500 font-mono text-xs font-bold tracking-widest uppercase">
             ¿Trabajas en algo parecido?
           </p>
-          <h2 className="mt-2 font-display text-xl font-semibold text-ink-900">
+          <h2 className="font-display text-ink-900 mt-2 text-xl font-semibold">
             Conversemos sobre tu caso.
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-ink-600">
+          <p className="text-ink-600 mt-2 text-sm leading-relaxed">
             30 minutos para entender el alcance y darte un punto de partida realista.
           </p>
           <Link
             href="/calcular-proyecto"
-            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700"
+            className="text-brand-600 hover:text-brand-700 mt-4 inline-flex items-center gap-2 text-sm font-semibold"
           >
             Agendar una primera llamada
             <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
           </Link>
         </aside>
 
-        <footer className="flex flex-wrap items-center gap-1.5 border-t border-ink-100 pt-6">
+        <footer className="border-ink-100 flex flex-wrap items-center gap-1.5 border-t pt-6">
           {post.tags.map((tag, idx) => (
             <span
               key={idx}
-              className="rounded-md border border-ink-200 bg-white px-2.5 py-1 font-mono text-xs text-ink-700"
+              className="border-ink-200 text-ink-700 rounded-md border bg-white px-2.5 py-1 font-mono text-xs"
             >
               #{tag}
             </span>

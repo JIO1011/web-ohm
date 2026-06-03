@@ -12,43 +12,43 @@
    */
 
   /* INK — warm white to near-black (tinted toward brand hue=25) */
-  --color-ink-0:   #ffffff;                  /* fondo principal, pure white */
-  --color-ink-50:  #f5f5f7;                  /* secciones alternas, Apple gray */
-  --color-ink-100: oklch(0.950 0.006 25);    /* bordes sutiles, card bg */
-  --color-ink-200: oklch(0.910 0.008 25);    /* bordes, separadores */
-  --color-ink-300: oklch(0.840 0.010 30);    /* bordes hover */
-  --color-ink-400: oklch(0.720 0.012 250);   /* texto placeholder */
-  --color-ink-500: oklch(0.580 0.014 250);   /* texto terciario */
-  --color-ink-600: oklch(0.460 0.016 250);   /* texto secundario */
-  --color-ink-700: oklch(0.360 0.018 250);   /* subtítulos */
-  --color-ink-800: oklch(0.260 0.018 250);   /* texto fuerte */
-  --color-ink-900: oklch(0.180 0.018 260);   /* titulares, casi negro */
-  --color-ink-950: oklch(0.120 0.014 260);   /* footer bg */
+  --color-ink-0: #ffffff; /* fondo principal, pure white */
+  --color-ink-50: #f5f5f7; /* secciones alternas, Apple gray */
+  --color-ink-100: oklch(0.95 0.006 25); /* bordes sutiles, card bg */
+  --color-ink-200: oklch(0.91 0.008 25); /* bordes, separadores */
+  --color-ink-300: oklch(0.84 0.01 30); /* bordes hover */
+  --color-ink-400: oklch(0.72 0.012 250); /* texto placeholder */
+  --color-ink-500: oklch(0.58 0.014 250); /* texto terciario */
+  --color-ink-600: oklch(0.46 0.016 250); /* texto secundario */
+  --color-ink-700: oklch(0.36 0.018 250); /* subtítulos */
+  --color-ink-800: oklch(0.26 0.018 250); /* texto fuerte */
+  --color-ink-900: oklch(0.18 0.018 260); /* titulares, casi negro */
+  --color-ink-950: oklch(0.12 0.014 260); /* footer bg */
 
   /* BRAND — red family, single accent (anchored at #DD0426) */
-  --color-brand-50:  oklch(0.970 0.015 23);
-  --color-brand-100: oklch(0.940 0.040 23);
-  --color-brand-200: oklch(0.880 0.090 23);
-  --color-brand-300: oklch(0.790 0.150 23);
-  --color-brand-400: oklch(0.660 0.195 21);
-  --color-brand-500: oklch(0.560 0.230 25);  /* primary CTA */
-  --color-brand-600: oklch(0.500 0.215 23);  /* ≈ #DD0426 hover */
+  --color-brand-50: oklch(0.97 0.015 23);
+  --color-brand-100: oklch(0.94 0.04 23);
+  --color-brand-200: oklch(0.88 0.09 23);
+  --color-brand-300: oklch(0.79 0.15 23);
+  --color-brand-400: oklch(0.66 0.195 21);
+  --color-brand-500: oklch(0.56 0.23 25); /* primary CTA */
+  --color-brand-600: oklch(0.5 0.215 23); /* ≈ #DD0426 hover */
   --color-brand-700: oklch(0.435 0.188 19);
   --color-brand-800: oklch(0.338 0.148 18);
-  --color-brand-900: oklch(0.245 0.100 18);
+  --color-brand-900: oklch(0.245 0.1 18);
   --color-brand-950: oklch(0.162 0.062 18);
 
   /* Systemic states only — not decorative */
-  --color-success: oklch(0.680 0.155 145);
-  --color-warning: oklch(0.760 0.155 75);
-  --color-info:    oklch(0.700 0.110 230);
+  --color-success: oklch(0.68 0.155 145);
+  --color-warning: oklch(0.76 0.155 75);
+  --color-info: oklch(0.7 0.11 230);
 
-  --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --ease-out-quart:  cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -59,16 +59,31 @@
   .animate-rise {
     animation: rise 0.56s var(--ease-out-expo) both;
   }
+  /* Friendly geometric display face used only by the standalone calculator
+     (/calcular-proyecto). Kept out of the OhmRoyal token system on purpose. */
+  .font-outfit {
+    font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes rise {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 html {
@@ -76,8 +91,8 @@ html {
 }
 
 body {
-  background-color: #ffffff;               /* ink-0 pure white */
-  color: oklch(0.180 0.018 260);           /* ink-900 near-black */
+  background-color: #ffffff; /* ink-0 pure white */
+  color: oklch(0.18 0.018 260); /* ink-900 near-black */
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.65;
@@ -86,6 +101,6 @@ body {
 }
 
 ::selection {
-  background-color: oklch(0.940 0.040 23); /* brand-100 */
-  color: oklch(0.338 0.148 18);            /* brand-800 */
+  background-color: oklch(0.94 0.04 23); /* brand-100 */
+  color: oklch(0.338 0.148 18); /* brand-800 */
 }

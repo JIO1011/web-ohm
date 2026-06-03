@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 import { blogPosts } from "@/data/mock-data";
 import type { BlogPost } from "@/types";
 import { getPostPalette } from "./blog-images";
@@ -44,17 +45,10 @@ const CATEGORIES = [
 
 type Category = (typeof CATEGORIES)[number];
 
-/* Category → badge color using the 4-color palette */
-const CATEGORY_BADGE: Record<string, string> = {
-  "IA y Machine Learning": "bg-blue-500 text-white",
-  "Cloud & DevOps": "bg-amber-500 text-ink-900",
-  "Desarrollo Web": "bg-blue-600 text-white",
-  Ciberseguridad: "bg-brand-600 text-white",
-};
-
-function getCategoryBadge(category: string): string {
-  return CATEGORY_BADGE[category] ?? "bg-ink-700 text-ink-0";
-}
+/* Badges are neutral — the category color lives in the cover gradient (PostVisual),
+   so badges never compete with it. Glass over images, solid ink on white surfaces. */
+const BADGE_ON_IMAGE = "bg-white/90 text-ink-900 shadow-sm backdrop-blur-sm";
+const BADGE_ON_SURFACE = "bg-ink-900 text-white";
 
 function PostVisual({
   id,
@@ -161,15 +155,15 @@ export default function BlogSection() {
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 left-1/2 h-[350px] w-[700px] -translate-x-1/2 bg-amber-500/10 blur-[100px]"
+          className="bg-brand-500/10 pointer-events-none absolute top-0 left-1/2 h-[350px] w-[700px] -translate-x-1/2 blur-[100px]"
         />
 
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-sm font-semibold tracking-wide text-amber-400">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" strokeWidth={1.75} />
+          <div className="border-brand-500/30 bg-brand-500/10 text-brand-400 mb-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-xs font-bold tracking-widest uppercase">
+            <Sparkles className="text-brand-400 h-3.5 w-3.5" strokeWidth={1.75} />
             <span>OhmRoyal Journal</span>
           </div>
-          <h1 className="font-display text-ink-0 mx-auto mt-4 max-w-4xl text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">
+          <h1 className="font-display text-ink-0 mx-auto mt-4 max-w-4xl text-4xl leading-tight font-semibold tracking-tight sm:text-5xl lg:text-6xl">
             Notas sobre arquitectura, IA y lo que pasa en producción.
           </h1>
           <p className="text-ink-400 mx-auto mt-4 max-w-2xl text-sm leading-relaxed sm:text-base">
@@ -182,7 +176,7 @@ export default function BlogSection() {
       {/* BENTO HERO GRID */}
       {kubernetesPost && iaPost && nextjsPost && apiSecurityPost && (
         <section id="blog-bento-hero" className="mx-auto max-w-7xl gap-4 px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+          <ScrollReveal className="grid grid-cols-1 gap-4 md:grid-cols-12">
             {/* Left tall — IA post (blue) */}
             <Link
               href={`/blog/${iaPost.slug}`}
@@ -196,16 +190,16 @@ export default function BlogSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
               <div className="absolute top-4 left-4">
                 <span
-                  className={`rounded-full px-3 py-1 font-mono text-xs font-bold tracking-wider uppercase ${getCategoryBadge(iaPost.category)}`}
+                  className={`rounded-full px-3 py-1 font-mono text-xs font-bold tracking-wider uppercase ${BADGE_ON_IMAGE}`}
                 >
                   {iaPost.category}
                 </span>
               </div>
               <div className="absolute right-5 bottom-5 left-5 space-y-2">
-                <span className="block font-mono text-xs text-amber-400">
+                <span className="text-ink-300 block font-mono text-xs">
                   {iaPost.readTime} · {iaPost.author.name}
                 </span>
-                <h2 className="font-display text-xl leading-snug font-semibold tracking-tight text-white transition-colors group-hover:text-amber-300">
+                <h2 className="font-display group-hover:text-brand-300 text-xl leading-snug font-semibold tracking-tight text-white transition-colors">
                   {iaPost.title}
                 </h2>
                 <p className="line-clamp-2 text-sm leading-relaxed text-white/70">
@@ -228,16 +222,16 @@ export default function BlogSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 <div className="absolute top-3 left-3">
                   <span
-                    className={`rounded-full px-2.5 py-0.5 font-mono text-xs font-bold uppercase ${getCategoryBadge(kubernetesPost.category)}`}
+                    className={`rounded-full px-2.5 py-0.5 font-mono text-xs font-bold uppercase ${BADGE_ON_IMAGE}`}
                   >
                     {kubernetesPost.category}
                   </span>
                 </div>
                 <div className="absolute right-4 bottom-4 left-4 space-y-1.5">
-                  <span className="block font-mono text-xs font-semibold text-amber-400">
+                  <span className="text-ink-300 block font-mono text-xs font-semibold">
                     {kubernetesPost.readTime} · {kubernetesPost.author.name}
                   </span>
-                  <h3 className="font-display text-base leading-snug font-semibold text-white transition-colors group-hover:text-amber-300 sm:text-lg">
+                  <h3 className="font-display group-hover:text-brand-300 text-base leading-snug font-semibold text-white transition-colors sm:text-lg">
                     {kubernetesPost.title}
                   </h3>
                 </div>
@@ -255,16 +249,16 @@ export default function BlogSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 <div className="absolute top-3 left-3">
                   <span
-                    className={`rounded-full px-2.5 py-0.5 font-mono text-xs font-bold uppercase ${getCategoryBadge(nextjsPost.category)}`}
+                    className={`rounded-full px-2.5 py-0.5 font-mono text-xs font-bold uppercase ${BADGE_ON_IMAGE}`}
                   >
                     {nextjsPost.category}
                   </span>
                 </div>
                 <div className="absolute right-4 bottom-4 left-4 space-y-1.5">
-                  <span className="block font-mono text-xs font-semibold text-amber-400">
+                  <span className="text-ink-300 block font-mono text-xs font-semibold">
                     {nextjsPost.readTime} · {nextjsPost.author.name}
                   </span>
-                  <h3 className="font-display text-base leading-snug font-semibold text-white transition-colors group-hover:text-amber-300 sm:text-lg">
+                  <h3 className="font-display group-hover:text-brand-300 text-base leading-snug font-semibold text-white transition-colors sm:text-lg">
                     {nextjsPost.title}
                   </h3>
                 </div>
@@ -284,16 +278,16 @@ export default function BlogSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
               <div className="absolute top-4 left-4">
                 <span
-                  className={`rounded-full px-3 py-1 font-mono text-xs font-bold tracking-wider uppercase ${getCategoryBadge(apiSecurityPost.category)}`}
+                  className={`rounded-full px-3 py-1 font-mono text-xs font-bold tracking-wider uppercase ${BADGE_ON_IMAGE}`}
                 >
                   {apiSecurityPost.category}
                 </span>
               </div>
               <div className="absolute right-5 bottom-5 left-5 space-y-2">
-                <span className="block font-mono text-xs text-amber-400">
+                <span className="text-ink-300 block font-mono text-xs">
                   {apiSecurityPost.readTime} · {apiSecurityPost.author.name}
                 </span>
-                <h2 className="font-display text-base leading-snug font-semibold tracking-tight text-white transition-colors group-hover:text-amber-300">
+                <h2 className="font-display group-hover:text-brand-300 text-base leading-snug font-semibold tracking-tight text-white transition-colors">
                   {apiSecurityPost.title}
                 </h2>
                 <p className="line-clamp-3 text-xs leading-relaxed text-white/60">
@@ -301,7 +295,7 @@ export default function BlogSection() {
                 </p>
               </div>
             </Link>
-          </div>
+          </ScrollReveal>
         </section>
       )}
 
@@ -310,30 +304,36 @@ export default function BlogSection() {
         id="blog-trending-reviews"
         className="mx-auto max-w-7xl space-y-5 px-4 sm:px-6 lg:px-8"
       >
-        <div className="border-ink-200 flex items-center justify-between border-b pb-3">
-          <div className="flex items-baseline gap-2">
-            <span className="font-mono text-2xl leading-none font-light text-amber-500">(</span>
-            <h2 className="font-display text-ink-900 text-xl font-semibold tracking-tight uppercase">
-              Artículos Destacados
+        <div className="border-ink-200 flex items-end justify-between border-b pb-4">
+          <div className="space-y-2">
+            <span className="text-brand-500 block font-mono text-xs font-bold tracking-widest uppercase">
+              Lo más leído
+            </span>
+            <h2 className="font-display text-ink-900 text-2xl font-semibold tracking-tight sm:text-3xl">
+              Artículos destacados
             </h2>
           </div>
           <Link
             href="/blog"
-            className="font-mono text-sm font-semibold text-blue-500 hover:text-blue-600"
+            className="group text-ink-900 hover:text-brand-600 inline-flex items-center gap-2 self-end text-sm font-medium transition-colors"
           >
-            ver todos →
+            Ver todos
+            <ArrowRight
+              className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+              strokeWidth={1.75}
+            />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <ScrollReveal className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {blogPosts.slice(0, 3).map((post, idx) => (
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
-              className="group border-ink-200 relative flex cursor-pointer items-center gap-4 overflow-hidden rounded-2xl border bg-white p-4 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+              className="group border-ink-200 hover:border-ink-300 relative flex cursor-pointer items-center gap-4 overflow-hidden rounded-2xl border bg-white p-4 shadow-sm transition-all hover:shadow-md"
             >
               <div className="relative flex-shrink-0">
-                <div className="text-ink-900 absolute -top-2 -left-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 font-mono text-xs font-bold shadow">
+                <div className="bg-brand-500 absolute -top-2 -left-2 z-10 flex h-6 w-6 items-center justify-center rounded-full font-mono text-xs font-bold text-white shadow">
                   {idx + 1}
                 </div>
                 <div className="border-ink-200 h-16 w-16 overflow-hidden rounded-xl border">
@@ -342,11 +342,11 @@ export default function BlogSection() {
               </div>
               <div className="min-w-0 flex-1 space-y-1">
                 <span
-                  className={`inline-block rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${getCategoryBadge(post.category)}`}
+                  className={`inline-block rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${BADGE_ON_SURFACE}`}
                 >
                   {post.category}
                 </span>
-                <h3 className="text-ink-900 line-clamp-2 text-sm leading-snug font-semibold transition-colors group-hover:text-blue-600">
+                <h3 className="text-ink-900 group-hover:text-brand-600 line-clamp-2 text-sm leading-snug font-semibold transition-colors">
                   {post.title}
                 </h3>
                 <span className="text-ink-500 flex items-center gap-1 font-mono text-xs">
@@ -356,16 +356,18 @@ export default function BlogSection() {
               </div>
             </Link>
           ))}
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* FILTERED FEED */}
       <section id="blog-filtered-feed" className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
         <div className="border-ink-200 flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex items-baseline gap-2">
-            <span className="font-mono text-2xl leading-none font-light text-amber-500">(</span>
-            <h2 className="font-display text-ink-900 text-xl font-semibold tracking-tight uppercase">
-              Ingeniería & Código
+          <div className="space-y-2">
+            <span className="text-brand-500 block font-mono text-xs font-bold tracking-widest uppercase">
+              Todos los artículos
+            </span>
+            <h2 className="font-display text-ink-900 text-2xl font-semibold tracking-tight sm:text-3xl">
+              Ingeniería &amp; código
             </h2>
           </div>
 
@@ -377,10 +379,10 @@ export default function BlogSection() {
                   key={cat}
                   type="button"
                   onClick={() => setActiveCategory(cat)}
-                  className={`cursor-pointer rounded-full border px-3.5 py-1.5 font-mono text-sm font-semibold tracking-wide uppercase transition-all ${
+                  className={`cursor-pointer rounded-full border px-3.5 py-1.5 font-mono text-xs font-semibold tracking-wide uppercase transition-all ${
                     isActive
-                      ? "border-blue-500 bg-blue-500 text-white shadow-md shadow-blue-500/20"
-                      : "border-ink-200 text-ink-600 bg-white hover:border-blue-300 hover:text-blue-600"
+                      ? "border-ink-900 bg-ink-900 text-white shadow-sm"
+                      : "border-ink-200 text-ink-600 hover:border-ink-300 hover:text-ink-900 bg-white"
                   }`}
                 >
                   {cat}
@@ -399,12 +401,12 @@ export default function BlogSection() {
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="group border-ink-200 flex cursor-pointer flex-col overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg"
+                className="group border-ink-200 hover:border-ink-300 flex cursor-pointer flex-col overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
               >
                 <div className="border-ink-100 relative h-36 w-full overflow-hidden border-b">
                   <PostVisual id={post.id} category={post.category} className="h-full w-full" />
                   <span
-                    className={`absolute bottom-2 left-2 rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${getCategoryBadge(post.category)}`}
+                    className={`absolute bottom-2 left-2 rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${BADGE_ON_IMAGE}`}
                   >
                     {post.category}
                   </span>
@@ -413,10 +415,10 @@ export default function BlogSection() {
                 <div className="flex flex-1 flex-col gap-3 p-4">
                   <div className="space-y-1">
                     <div className="text-ink-500 flex items-center justify-between font-mono text-[10px] font-semibold">
-                      <span className="text-amber-500">{post.readTime} lectura</span>
+                      <span>{post.readTime} lectura</span>
                       <span>{post.date}</span>
                     </div>
-                    <h3 className="text-ink-900 line-clamp-2 text-sm leading-snug font-semibold transition-colors group-hover:text-blue-600">
+                    <h3 className="text-ink-900 group-hover:text-brand-600 line-clamp-2 text-sm leading-snug font-semibold transition-colors">
                       {post.title}
                     </h3>
                     <p className="text-ink-500 line-clamp-2 font-sans text-xs leading-normal">
@@ -447,10 +449,10 @@ export default function BlogSection() {
                         type="button"
                         onClick={(e) => handleShare(e, post)}
                         aria-label="Copiar enlace"
-                        className="text-ink-400 transition-colors hover:text-blue-500"
+                        className="text-ink-400 hover:text-brand-600 transition-colors"
                       >
                         {copiedId === post.id ? (
-                          <Check className="h-3.5 w-3.5 text-blue-500" strokeWidth={2} />
+                          <Check className="text-brand-600 h-3.5 w-3.5" strokeWidth={2} />
                         ) : (
                           <Share2 className="h-3.5 w-3.5" strokeWidth={1.5} />
                         )}
@@ -468,14 +470,14 @@ export default function BlogSection() {
         )}
 
         {/* Bottom CTAs */}
-        <div className="grid grid-cols-1 gap-4 pt-10 md:grid-cols-2">
+        <ScrollReveal className="grid grid-cols-1 gap-4 pt-10 md:grid-cols-2">
           <div className="group bg-ink-900 relative flex flex-col justify-between overflow-hidden rounded-3xl p-5 shadow-md">
-            <div className="pointer-events-none absolute top-0 right-0 h-28 w-28 rounded-full bg-amber-500/15 blur-2xl" />
+            <div className="bg-brand-500/15 pointer-events-none absolute top-0 right-0 h-28 w-28 rounded-full blur-2xl" />
             <div className="space-y-2">
-              <span className="font-mono text-xs font-semibold tracking-wider text-amber-400 uppercase">
+              <span className="text-brand-400 font-mono text-xs font-bold tracking-widest uppercase">
                 Herramienta
               </span>
-              <h3 className="text-ink-0 text-base leading-tight font-semibold transition-colors group-hover:text-amber-300">
+              <h3 className="text-ink-0 group-hover:text-brand-300 text-base leading-tight font-semibold transition-colors">
                 Presupuestador de software
               </h3>
               <p className="text-ink-400 text-sm leading-normal">
@@ -484,19 +486,19 @@ export default function BlogSection() {
             </div>
             <Link
               href="/calcular-proyecto"
-              className="mt-4 inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-amber-400 hover:text-amber-300"
+              className="text-brand-400 hover:text-brand-300 mt-4 inline-flex items-center gap-1.5 font-mono text-sm font-semibold"
             >
               Abrir calculadora
               <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.75} />
             </Link>
           </div>
 
-          <div className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
+          <div className="group border-ink-200 bg-ink-50 flex flex-col justify-between overflow-hidden rounded-3xl border p-5 shadow-sm">
             <div className="space-y-2">
-              <span className="font-mono text-xs font-semibold tracking-wider text-blue-600 uppercase">
+              <span className="text-brand-500 font-mono text-xs font-bold tracking-widest uppercase">
                 Diagnóstico
               </span>
-              <h3 className="text-ink-900 text-base leading-tight font-semibold transition-colors group-hover:text-blue-600">
+              <h3 className="text-ink-900 group-hover:text-brand-600 text-base leading-tight font-semibold transition-colors">
                 Auditoría técnica express
               </h3>
               <p className="text-ink-600 text-sm leading-normal">
@@ -505,13 +507,13 @@ export default function BlogSection() {
             </div>
             <Link
               href="/calcular-proyecto"
-              className="mt-4 inline-flex items-center gap-1.5 font-mono text-sm font-semibold text-blue-600 hover:text-blue-700"
+              className="text-brand-600 hover:text-brand-700 mt-4 inline-flex items-center gap-1.5 font-mono text-sm font-semibold"
             >
               Agendar llamada
               <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.75} />
             </Link>
           </div>
-        </div>
+        </ScrollReveal>
 
         <p className="text-ink-400 block pt-4 text-center font-mono text-[10px] uppercase">
           <Clock className="mr-1 inline h-3 w-3" strokeWidth={1.5} />
