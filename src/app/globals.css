@@ -86,6 +86,46 @@
   }
 }
 
+/* ── Calculator landing — perpetual float + slow gear spin (ProgriSaaS-style) ── */
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+@keyframes floaty-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(12px);
+  }
+}
+@keyframes gear-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes gear-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -240;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calc-anim {
+    animation: none !important;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
