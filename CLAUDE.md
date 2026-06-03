@@ -14,7 +14,48 @@ npm run format        # prettier --write src/**
 npm run format:check  # prettier --check src/**
 ```
 
-There is no test suite. `npm run typecheck` and `npm run lint` are the only correctness gates. Husky runs `lint-staged` (eslint --fix + prettier) on `pre-commit`.
+There is no test suite and no pre-commit hook. Run the verification sequence manually before every commit.
+
+## Before committing
+
+Run in this order — each gate catches a different class of error:
+
+```bash
+npm run format       # auto-fix style (prettier). Run first so lint sees clean code.
+npm run lint         # ESLint + jsx-a11y. Must exit 0.
+npm run typecheck    # tsc --noEmit strict. Must exit 0.
+npm run build        # required before any PR or deploy — catches missing exports,
+                     # invalid dynamic imports, and metadata type errors that tsc misses.
+```
+
+All four must pass. If `lint` or `typecheck` fail, fix the errors — do not suppress with `eslint-disable` or `@ts-ignore` unless there is a documented external-library reason.
+
+## TypeScript & Next.js rules
+
+**Strict config implications** (`noUncheckedIndexedAccess`, `noImplicitReturns`):
+- Array/object index access always yields `T | undefined` — guard before use: `const first = arr[0]; if (!first) return;`
+- Every code path in a non-void function must explicitly return.
+
+**Next.js 15 async APIs** — `params` and `searchParams` are now `Promise<{...}>`:
+```ts
+// correct
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+}
+```
+Never access `params.slug` synchronously — it will be a Promise at runtime.
+
+**Client/Server boundary**:
+- Default to Server Components. Add `"use client"` only at the deepest leaf that needs it.
+- Never import from `src/lib/` (server primitives) inside a `"use client"` component.
+- Keep data-fetching and business logic on the server side; pass serializable props down.
+
+**`next/image`**: always provide `width` + `height`, or `fill` + a positioned parent. Never use a plain `<img>` tag.
+
+**Types**:
+- No `any`. Use `unknown` and narrow with type guards or Zod.
+- Prop types must be explicit interfaces, not inferred from JSX usage.
+- Prefer `type` over `interface` for union/intersection shapes; `interface` for extendable object shapes.
 
 ## Environment
 
