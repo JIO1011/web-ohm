@@ -25,8 +25,7 @@ export async function POST(req: Request) {
   if (!limit.ok) {
     return NextResponse.json(
       {
-        error:
-          "Has alcanzado el límite temporal de consultas. Reintenta en unos segundos.",
+        error: "Has alcanzado el límite temporal de consultas. Reintenta en unos segundos.",
       },
       {
         status: 429,
@@ -44,10 +43,7 @@ export async function POST(req: Request) {
 
   const parsed = Body.safeParse(json);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Cuerpo inválido." },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Cuerpo inválido." }, { status: 400 });
   }
 
   const ai = getGeminiClient();

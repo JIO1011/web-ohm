@@ -15,9 +15,11 @@ import {
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import type { Category, DashboardResponse } from "./types";
 import { CATEGORIES, CATEGORY_LABELS, PRIORITY_META } from "./types";
 import { exportToCSV } from "./scoring";
+import { createClient } from "@/lib/supabase/client";
 
 /* ── Shared styles ── */
 const btnPrimary =
@@ -120,15 +122,32 @@ export default function ResultsDashboard({
     }
   }, [sessionCode]);
 
-  /* Polling every 10s — skips ticks while the tab is hidden to save disk/network. */
+  /* Live updates via Supabase Realtime broadcast on the per-session channel.
+     The server emits "session_changed" when a need is added; we refetch on
+     each event. A slow interval is kept as a safety net for missed broadcasts
+     (best-effort delivery) and for refreshing when returning to the tab. */
   useEffect(() => {
     if (!initialData) fetchData();
     else setLastRefresh(new Date());
+
+    const supabase = createClient();
+    let channel: RealtimeChannel | null = null;
+    if (supabase) {
+      channel = supabase
+        .channel(`consensus-${sessionCode}`)
+        .on("broadcast", { event: "session_changed" }, () => fetchData())
+        .subscribe();
+    }
+
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") fetchData();
-    }, 10_000);
-    return () => clearInterval(interval);
-  }, [fetchData, initialData]);
+    }, 30_000);
+
+    return () => {
+      clearInterval(interval);
+      if (supabase && channel) supabase.removeChannel(channel);
+    };
+  }, [fetchData, initialData, sessionCode]);
 
   /* ── Filtered needs ── */
   const filteredNeeds = useMemo(() => {
@@ -155,6 +174,7 @@ export default function ResultsDashboard({
     const csv = exportToCSV({
       code: data.session.code,
       name: data.session.name,
+      status: data.session.status,
       createdAt: data.session.createdAt,
       needs: data.needs,
     });
@@ -212,10 +232,17 @@ export default function ResultsDashboard({
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="space-y-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#eaf0ff] px-3 py-1 text-xs font-semibold text-[#2f6bff]">
-                <BarChart3 className="h-3.5 w-3.5" strokeWidth={2} />
-                Resultados · {sessionCode}
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#eaf0ff] px-3 py-1 text-xs font-semibold text-[#2f6bff]">
+                  <BarChart3 className="h-3.5 w-3.5" strokeWidth={2} />
+                  Resultados · {sessionCode}
+                </span>
+                {data.session.status === "closed" ? (
+                  <span className="inline-flex items-center rounded-full bg-[#f1f5f9] px-3 py-1 text-xs font-semibold text-[#64748b]">
+                    Sesión cerrada
+                  </span>
+                ) : null}
+              </div>
               <h1 className="font-outfit text-3xl font-bold tracking-tight text-[#0f172a] sm:text-4xl">
                 {sessionName}
               </h1>
@@ -369,87 +396,128 @@ export default function ResultsDashboard({
                 </p>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-2xl border border-[#e7eaf3] bg-white shadow-sm">
-                <table className="w-full text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-[#eef1f7] bg-[#f6f8fd]">
-                      <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        #
-                      </th>
-                      <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        Categoría
-                      </th>
-                      <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        Descripción
-                      </th>
-                      <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        Área
-                      </th>
-                      <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        I
-                      </th>
-                      <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        U
-                      </th>
-                      <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        A
-                      </th>
-                      <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        Puntaje
-                      </th>
-                      <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
-                        Prioridad
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredNeeds.map((need, i) => {
-                      const meta = PRIORITY_META[need.priority];
-                      return (
-                        <tr
-                          key={need.id}
-                          className="border-b border-[#eef1f7] transition-colors last:border-0 hover:bg-[#f6f8fd]"
-                        >
-                          <td className="px-4 py-3 font-mono text-xs text-[#94a3b8]">{i + 1}</td>
-                          <td className="px-4 py-3">
-                            <span className="rounded-full bg-[#eaf0ff] px-2 py-0.5 text-[10px] font-semibold text-[#2f6bff]">
-                              {CATEGORY_LABELS[need.category]}
-                            </span>
-                          </td>
-                          <td className="max-w-[260px] px-4 py-3">
-                            <p className="truncate text-sm font-medium text-[#0f172a]">
-                              {need.description}
+              <>
+                {/* Mobile: stacked cards */}
+                <ul className="space-y-3 md:hidden">
+                  {filteredNeeds.map((need, i) => {
+                    const meta = PRIORITY_META[need.priority];
+                    return (
+                      <li
+                        key={need.id}
+                        className="rounded-2xl border border-[#e7eaf3] bg-white p-4 shadow-sm"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-[#0f172a]">{need.description}</p>
+                            <p className="mt-0.5 text-xs text-[#94a3b8]">
+                              {need.name} · {need.area}
                             </p>
-                            <p className="mt-0.5 truncate text-xs text-[#94a3b8]">{need.name}</p>
-                          </td>
-                          <td className="px-4 py-3 text-xs text-[#64748b]">{need.area}</td>
-                          <td className="px-4 py-3 text-center font-mono text-xs text-[#334155]">
-                            {need.impact}
-                          </td>
-                          <td className="px-4 py-3 text-center font-mono text-xs text-[#334155]">
-                            {need.urgency}
-                          </td>
-                          <td className="px-4 py-3 text-center font-mono text-xs text-[#334155]">
-                            {need.scope}
-                          </td>
-                          <td className="px-4 py-3 text-center">
-                            <span className="font-outfit text-base font-bold text-[#0f172a]">
-                              {need.score}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span
-                              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${meta.bg} ${meta.text} ${meta.border}`}
-                            >
-                              {meta.emoji} {meta.label}
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                          </div>
+                          <span className="font-outfit shrink-0 text-lg font-bold text-[#0f172a]">
+                            {need.score}
+                          </span>
+                        </div>
+                        <div className="mt-3 flex flex-wrap items-center gap-2 text-[10px]">
+                          <span className="rounded-full bg-[#eaf0ff] px-2 py-0.5 font-semibold text-[#2f6bff]">
+                            {CATEGORY_LABELS[need.category]}
+                          </span>
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-bold ${meta.bg} ${meta.text} ${meta.border}`}
+                          >
+                            {meta.emoji} {meta.label}
+                          </span>
+                          <span className="font-mono text-[#94a3b8]">
+                            #{i + 1} · I{need.impact} U{need.urgency} A{need.scope}
+                          </span>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                {/* Desktop: table */}
+                <div className="hidden overflow-x-auto rounded-2xl border border-[#e7eaf3] bg-white shadow-sm md:block">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-[#eef1f7] bg-[#f6f8fd]">
+                        <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          #
+                        </th>
+                        <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          Categoría
+                        </th>
+                        <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          Descripción
+                        </th>
+                        <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          Área
+                        </th>
+                        <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          I
+                        </th>
+                        <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          U
+                        </th>
+                        <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          A
+                        </th>
+                        <th className="px-4 py-3 text-center text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          Puntaje
+                        </th>
+                        <th className="px-4 py-3 text-[10px] font-semibold tracking-wide text-[#94a3b8] uppercase">
+                          Prioridad
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredNeeds.map((need, i) => {
+                        const meta = PRIORITY_META[need.priority];
+                        return (
+                          <tr
+                            key={need.id}
+                            className="border-b border-[#eef1f7] transition-colors last:border-0 hover:bg-[#f6f8fd]"
+                          >
+                            <td className="px-4 py-3 font-mono text-xs text-[#94a3b8]">{i + 1}</td>
+                            <td className="px-4 py-3">
+                              <span className="rounded-full bg-[#eaf0ff] px-2 py-0.5 text-[10px] font-semibold text-[#2f6bff]">
+                                {CATEGORY_LABELS[need.category]}
+                              </span>
+                            </td>
+                            <td className="max-w-[260px] px-4 py-3">
+                              <p className="truncate text-sm font-medium text-[#0f172a]">
+                                {need.description}
+                              </p>
+                              <p className="mt-0.5 truncate text-xs text-[#94a3b8]">{need.name}</p>
+                            </td>
+                            <td className="px-4 py-3 text-xs text-[#64748b]">{need.area}</td>
+                            <td className="px-4 py-3 text-center font-mono text-xs text-[#334155]">
+                              {need.impact}
+                            </td>
+                            <td className="px-4 py-3 text-center font-mono text-xs text-[#334155]">
+                              {need.urgency}
+                            </td>
+                            <td className="px-4 py-3 text-center font-mono text-xs text-[#334155]">
+                              {need.scope}
+                            </td>
+                            <td className="px-4 py-3 text-center">
+                              <span className="font-outfit text-base font-bold text-[#0f172a]">
+                                {need.score}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${meta.bg} ${meta.text} ${meta.border}`}
+                              >
+                                {meta.emoji} {meta.label}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         </div>

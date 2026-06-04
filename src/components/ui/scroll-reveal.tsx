@@ -12,7 +12,7 @@ interface ScrollRevealProps {
 }
 
 const variants = {
-  up:   { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } },
+  up: { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } },
   left: { hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0 } },
   fade: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
 } as const;

@@ -4,6 +4,8 @@ import { addNeed, getSession } from "@/lib/consensus-repo";
 import { computeStats, sortByScore } from "@/features/consensus/scoring";
 import { CATEGORIES } from "@/features/consensus/types";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { isSupabaseConfigured } from "@/lib/env";
+import { broadcastSessionChanged } from "@/lib/supabase/broadcast";
 
 export const runtime = "nodejs";
 
@@ -12,10 +14,13 @@ const NeedBody = z.object({
   area: z.string().min(1, "Área es obligatoria").max(120),
   category: z.enum(CATEGORIES),
   description: z.string().min(5, "Descripción muy corta").max(500),
-  justification: z.string().min(5, "Justificación muy corta").max(500),
+  // Optional: lowers participant friction (see UX phase 1).
+  justification: z.string().max(500).optional().default(""),
   impact: z.number().int().min(1).max(5),
   urgency: z.number().int().min(1).max(5),
   scope: z.number().int().min(1).max(5),
+  // Honeypot: real users never fill this. If present, we fake success (200).
+  hpField: z.string().optional(),
 });
 
 /* ── POST: submit a need ── */
@@ -46,14 +51,32 @@ export async function POST(req: Request, { params }: { params: Promise<{ code: s
     );
   }
 
+  // Honeypot tripped → pretend success, give bots no signal (CLAUDE.md contract).
+  if (parsed.data.hpField && parsed.data.hpField.length > 0) {
+    return NextResponse.json({ success: true, need: null }, { status: 200 });
+  }
+
+  if (!isSupabaseConfigured) {
+    return NextResponse.json({ error: "Consensus no está disponible." }, { status: 503 });
+  }
+
   try {
     const need = await addNeed(code, parsed.data);
     if (!need) {
       return NextResponse.json({ error: "Sesión no encontrada." }, { status: 404 });
     }
 
+    // Notify live results viewers (best-effort).
+    await broadcastSessionChanged(code);
+
     return NextResponse.json({ success: true, need }, { status: 201 });
   } catch (err) {
+    if (err instanceof Error && err.message === "SESSION_CLOSED") {
+      return NextResponse.json(
+        { error: "Esta sesión está cerrada y ya no acepta necesidades." },
+        { status: 409 }
+      );
+    }
     console.error("Error adding consensus need:", err);
     return NextResponse.json({ error: "Error de servidor." }, { status: 500 });
   }
@@ -82,7 +105,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ code: st
     const stats = computeStats(session.needs);
 
     return NextResponse.json({
-      session: { code: session.code, name: session.name, createdAt: session.createdAt },
+      session: {
+        code: session.code,
+        name: session.name,
+        status: session.status,
+        createdAt: session.createdAt,
+      },
       needs: sortedNeeds,
       stats,
     });

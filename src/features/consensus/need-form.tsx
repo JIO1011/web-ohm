@@ -16,9 +16,12 @@ import {
   ShieldAlert,
   Tag,
 } from "lucide-react";
-import type { Category, Need } from "./types";
+import type { Category, Need, SessionStatus } from "./types";
 import { CATEGORIES, CATEGORY_LABELS, PRIORITY_META } from "./types";
 import { calculateScore, getPriority } from "./scoring";
+
+/** Remembers the participant's name/area across needs and sessions. */
+const IDENTITY_KEY = "consensus:identity";
 
 /* ── Styles (consistent with presupuestador + create-session) ── */
 const btnPrimary =
@@ -118,9 +121,11 @@ function SliderField({
 export default function NeedForm({
   sessionCode,
   sessionName,
+  sessionStatus,
 }: {
   sessionCode: string;
   sessionName: string;
+  sessionStatus: SessionStatus;
 }) {
   const router = useRouter();
 
@@ -133,11 +138,26 @@ export default function NeedForm({
   const [impact, setImpact] = useState(3);
   const [urgency, setUrgency] = useState(3);
   const [scope, setScope] = useState(3);
+  /* Honeypot — real users never fill it; bots often do. */
+  const [hpField, setHpField] = useState("");
 
   /* Submission */
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [submittedNeed, setSubmittedNeed] = useState<Need | null>(null);
+
+  /* Restore remembered identity (name + area) on mount. */
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(IDENTITY_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { name?: string; area?: string };
+      if (saved.name) setName(saved.name);
+      if (saved.area) setArea(saved.area);
+    } catch {
+      /* ignore malformed storage */
+    }
+  }, []);
 
   /* Live score */
   const score = useMemo(() => calculateScore(impact, urgency, scope), [impact, urgency, scope]);
@@ -183,15 +203,20 @@ export default function NeedForm({
   }, []);
 
   const canSubmit =
-    name.trim().length >= 1 &&
-    area.trim().length >= 1 &&
-    description.trim().length >= 5 &&
-    justification.trim().length >= 5;
+    name.trim().length >= 1 && area.trim().length >= 1 && description.trim().length >= 5;
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
     setError("");
     setIsLoading(true);
+
+    // Remember identity for next time (best-effort).
+    try {
+      localStorage.setItem(IDENTITY_KEY, JSON.stringify({ name: name.trim(), area: area.trim() }));
+    } catch {
+      /* ignore */
+    }
+
     try {
       const res = await fetch(`/api/consensus/${sessionCode}/needs`, {
         method: "POST",
@@ -205,6 +230,7 @@ export default function NeedForm({
           impact,
           urgency,
           scope,
+          hpField,
         }),
       });
       const data = (await res.json()) as { success?: boolean; need?: Need; error?: string };
@@ -329,6 +355,31 @@ export default function NeedForm({
     );
   }
 
+  /* ── Closed session ── */
+  if (sessionStatus === "closed") {
+    return (
+      <div className="flex min-h-[70vh] items-center justify-center bg-[#f6f7fb] px-4 text-[#0f172a]">
+        <div className="max-w-md rounded-3xl border border-[#e7eaf3] bg-white p-8 text-center shadow-[0_18px_50px_-24px_rgba(15,23,42,0.25)]">
+          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f1f5f9]">
+            <ShieldAlert className="h-6 w-6 text-[#64748b]" strokeWidth={2} />
+          </span>
+          <h1 className="font-outfit text-xl font-bold text-[#0f172a]">{sessionName}</h1>
+          <p className="mt-2 text-sm text-[#64748b]">
+            Esta sesión está cerrada y ya no acepta nuevas necesidades.
+          </p>
+          <button
+            type="button"
+            onClick={() => router.push(`/consensus/${sessionCode}/resultados`)}
+            className={`mt-6 ${btnGhost}`}
+          >
+            Ver resultados
+            <ArrowRight className="h-4 w-4" strokeWidth={2} />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   /* ── Main form ── */
   return (
     <div className="bg-[#f6f7fb] pb-28 text-[#0f172a]">
@@ -358,6 +409,19 @@ export default function NeedForm({
       <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-[#e7eaf3] bg-white p-6 shadow-[0_18px_50px_-24px_rgba(15,23,42,0.25)] sm:p-8">
           <div className="space-y-8">
+            {/* Honeypot — hidden from humans, ignored by screen readers. */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+              <label htmlFor="hp-field">No llenar</label>
+              <input
+                id="hp-field"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={hpField}
+                onChange={(e) => setHpField(e.target.value)}
+              />
+            </div>
+
             {/* ── Section 1: Info básica ── */}
             <div className="space-y-4">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-[#0f172a]">
@@ -461,7 +525,7 @@ export default function NeedForm({
                   htmlFor="need-justification"
                   className="block text-sm font-semibold text-[#334155]"
                 >
-                  Justificación <span className="text-[#ff7a59]">*</span>
+                  Justificación <span className="font-normal text-[#94a3b8]">(opcional)</span>
                 </label>
                 <textarea
                   id="need-justification"

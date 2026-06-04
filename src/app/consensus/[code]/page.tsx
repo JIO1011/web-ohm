@@ -26,5 +26,11 @@ export default async function ConsensusParticipantPage({ params }: Props) {
     notFound();
   }
 
-  return <NeedForm sessionCode={session.code} sessionName={session.name} />;
+  return (
+    <NeedForm
+      sessionCode={session.code}
+      sessionName={session.name}
+      sessionStatus={session.status}
+    />
+  );
 }

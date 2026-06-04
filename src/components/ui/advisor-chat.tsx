@@ -111,7 +111,7 @@ export default function AdvisorChat() {
   return (
     <div
       id="advisor-chatbot-widget"
-      className="fixed bottom-6 right-6 z-50 flex flex-col items-end"
+      className="fixed right-6 bottom-6 z-50 flex flex-col items-end"
     >
       {isOpen && (
         <div
@@ -128,18 +128,24 @@ export default function AdvisorChat() {
               <div className="relative">
                 <div
                   id="crysta-avatar-bg"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-brand-600 to-brand-500 p-0.5 shadow-sm"
+                  className="from-brand-600 to-brand-500 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr p-0.5 shadow-sm"
                 >
                   <div className="flex h-full w-full overflow-hidden rounded-full bg-white p-1">
-                    <Image src="/logo.webp" alt="OhmRoyal" width={32} height={32} className="h-full w-full animate-pulse object-contain" />
+                    <Image
+                      src="/logo.webp"
+                      alt="OhmRoyal"
+                      width={32}
+                      height={32}
+                      className="h-full w-full animate-pulse object-contain"
+                    />
                   </div>
                 </div>
-                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
+                <span className="absolute right-0 bottom-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
               </div>
               <div>
                 <div className="flex items-center space-x-1.5">
                   <h4 className="font-sans text-sm font-extrabold text-slate-900">Crysta</h4>
-                  <span className="rounded border border-brand-100 bg-brand-50 px-1 font-mono text-xs font-extrabold uppercase text-brand-600">
+                  <span className="border-brand-100 bg-brand-50 text-brand-600 rounded border px-1 font-mono text-xs font-extrabold uppercase">
                     INGENIERÍA
                   </span>
                 </div>
@@ -162,7 +168,7 @@ export default function AdvisorChat() {
           {/* Messages */}
           <div
             id="chat-messages-log"
-            className="scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent flex-1 space-y-4 overflow-y-auto bg-slate-50/50 p-4"
+            className="flex-1 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent space-y-4 overflow-y-auto bg-slate-50/50 p-4"
           >
             {messages.map((m) => {
               const isAdvisor = m.sender === "advisor";
@@ -172,16 +178,16 @@ export default function AdvisorChat() {
                   className={`flex ${isAdvisor ? "justify-start" : "justify-end"} items-start space-x-2`}
                 >
                   {isAdvisor && (
-                    <div className="mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-brand-100 bg-brand-50 text-brand-600">
+                    <div className="border-brand-100 bg-brand-50 text-brand-600 mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border">
                       <Bot className="h-4 w-4" />
                     </div>
                   )}
                   <div className="flex max-w-[80%] flex-col">
                     <div
-                      className={`whitespace-pre-line rounded-2xl px-3.5 py-2.5 font-sans text-sm leading-relaxed ${
+                      className={`rounded-2xl px-3.5 py-2.5 font-sans text-sm leading-relaxed whitespace-pre-line ${
                         isAdvisor
                           ? "border border-slate-200/80 bg-white text-slate-800 shadow-sm"
-                          : "bg-gradient-to-r from-brand-600 to-brand-500 font-bold text-white shadow-sm"
+                          : "from-brand-600 to-brand-500 bg-gradient-to-r font-bold text-white shadow-sm"
                       }`}
                     >
                       {m.text}
@@ -204,11 +210,11 @@ export default function AdvisorChat() {
 
             {isTyping && (
               <div className="flex items-center justify-start space-x-2">
-                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-brand-100 bg-brand-50 text-brand-600">
+                <div className="border-brand-100 bg-brand-50 text-brand-600 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border">
                   <Bot className="h-4 w-4" />
                 </div>
                 <div className="flex items-center space-x-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
-                  <Hourglass className="h-3.5 w-3.5 animate-spin text-brand-500" />
+                  <Hourglass className="text-brand-500 h-3.5 w-3.5 animate-spin" />
                   <span className="font-medium">Crysta está analizando la arquitectura...</span>
                 </div>
               </div>
@@ -217,13 +223,13 @@ export default function AdvisorChat() {
           </div>
 
           {/* Quick suggestions */}
-          <div className="scrollbar-none flex gap-2 overflow-x-auto whitespace-nowrap border-t border-slate-200/80 bg-slate-50 px-4 py-2">
+          <div className="flex scrollbar-none gap-2 overflow-x-auto border-t border-slate-200/80 bg-slate-50 px-4 py-2 whitespace-nowrap">
             {SUGGESTED_QUESTIONS.map((q, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => void handleSendMessage(q)}
-                className="inline-block cursor-pointer rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-black text-slate-600 shadow-sm transition-colors hover:border-brand-300 hover:text-brand-600"
+                className="hover:border-brand-300 hover:text-brand-600 inline-block cursor-pointer rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-black text-slate-600 shadow-sm transition-colors"
               >
                 {q}
               </button>
@@ -241,7 +247,7 @@ export default function AdvisorChat() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               disabled={isTyping}
-              className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+              className="focus:ring-brand-500 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:ring-1 focus:outline-none disabled:opacity-50"
             />
             <button
               type="button"
@@ -249,7 +255,7 @@ export default function AdvisorChat() {
               aria-label="Enviar mensaje"
               onClick={() => void handleSendMessage(inputValue)}
               disabled={isTyping || !inputValue.trim()}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-sm transition-all hover:from-brand-500 hover:to-brand-400 active:scale-95 disabled:opacity-40"
+              className="from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r text-white shadow-sm transition-all active:scale-95 disabled:opacity-40"
             >
               <Send className="h-3.5 w-3.5" />
             </button>
@@ -264,7 +270,7 @@ export default function AdvisorChat() {
         aria-label={isOpen ? "Cerrar chat" : "Abrir chat con Crysta"}
         aria-expanded={isOpen}
         onClick={() => setIsOpen((v) => !v)}
-        className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-brand-500/10 bg-gradient-to-tr from-brand-600 to-brand-500 text-white shadow-xl shadow-brand-200 transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-brand-300 focus:outline-none active:scale-95"
+        className="border-brand-500/10 from-brand-600 to-brand-500 shadow-brand-200 hover:shadow-brand-300 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border bg-gradient-to-tr text-white shadow-xl transition-transform duration-300 hover:scale-105 hover:shadow-2xl focus:outline-none active:scale-95"
       >
         {isOpen ? <X className="h-5 w-5" /> : <MessageSquare className="h-5 w-5 animate-pulse" />}
       </button>

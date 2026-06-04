@@ -34,7 +34,12 @@ export default async function ConsensusResultsPage({ params }: Props) {
   const stats = computeStats(session.needs);
 
   const initialData: DashboardResponse = {
-    session: { code: session.code, name: session.name, createdAt: session.createdAt },
+    session: {
+      code: session.code,
+      name: session.name,
+      status: session.status,
+      createdAt: session.createdAt,
+    },
     needs: sortedNeeds,
     stats,
   };

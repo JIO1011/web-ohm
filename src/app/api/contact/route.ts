@@ -5,9 +5,7 @@ import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-const customAnswersSchema = z
-  .record(z.union([z.string(), z.number()]))
-  .default({});
+const customAnswersSchema = z.record(z.union([z.string(), z.number()])).default({});
 
 const ContactBody = z.object({
   name: z.string().min(2).max(120),
@@ -28,8 +26,7 @@ export async function POST(req: Request) {
   if (!limit.ok) {
     return NextResponse.json(
       {
-        error:
-          "Has enviado demasiadas solicitudes recientes. Vuelve a intentarlo en unos minutos.",
+        error: "Has enviado demasiadas solicitudes recientes. Vuelve a intentarlo en unos minutos.",
       },
       {
         status: 429,
@@ -78,8 +75,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: true,
-        message:
-          "Propuesta de proyecto recibida con éxito y registrada en OhmRoyal Leads.",
+        message: "Propuesta de proyecto recibida con éxito y registrada en OhmRoyal Leads.",
         leadId: lead.id,
       },
       { status: 201 }

@@ -47,7 +47,7 @@ export default function Navbar() {
   return (
     <header
       id="ohmroyal-nav"
-      className={`fixed left-0 top-0 z-50 w-full transition-all duration-300 ${navBgClass}`}
+      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${navBgClass}`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
@@ -57,10 +57,16 @@ export default function Navbar() {
             className={`flex cursor-pointer items-center gap-2 text-xl font-semibold tracking-tight focus:outline-none ${logoColor}`}
           >
             <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden">
-              <Image src="/logo.webp" alt="OhmRoyal" width={32} height={32} className="h-full w-full object-contain" />
+              <Image
+                src="/logo.webp"
+                alt="OhmRoyal"
+                width={32}
+                height={32}
+                className="h-full w-full object-contain"
+              />
             </div>
             <span className="font-display">
-              Ohm<span className="font-bold text-brand-500">Royal</span>
+              Ohm<span className="text-brand-500 font-bold">Royal</span>
             </span>
           </Link>
 
@@ -75,7 +81,7 @@ export default function Navbar() {
                 >
                   {item.label}
                   {active && (
-                    <span className="absolute bottom-1 left-4 right-4 h-0.5 rounded-full bg-brand-500" />
+                    <span className="bg-brand-500 absolute right-4 bottom-1 left-4 h-0.5 rounded-full" />
                   )}
                 </Link>
               );
@@ -86,7 +92,7 @@ export default function Navbar() {
             <Link
               id="nav-cta-calcular-proyecto"
               href="/calcular-proyecto"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-medium text-white shadow-md shadow-brand-500/20 transition-all duration-200 hover:bg-brand-600 hover:shadow-brand-600/25 active:scale-[0.97]"
+              className="bg-brand-500 shadow-brand-500/20 hover:bg-brand-600 hover:shadow-brand-600/25 inline-flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all duration-200 active:scale-[0.97]"
               style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
             >
               <span>Calcular Proyecto</span>
@@ -101,12 +107,12 @@ export default function Navbar() {
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((v) => !v)}
-              className="rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="focus:ring-brand-500 rounded-lg p-2 focus:ring-2 focus:outline-none"
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6 text-ink-900" strokeWidth={1.75} />
+                <X className="text-ink-900 h-6 w-6" strokeWidth={1.75} />
               ) : (
-                <Menu className="h-6 w-6 text-ink-900" strokeWidth={1.75} />
+                <Menu className="text-ink-900 h-6 w-6" strokeWidth={1.75} />
               )}
             </button>
           </div>
@@ -116,7 +122,7 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div
           id="mobile-nav-drawer"
-          className="animate-fade-in absolute left-0 top-full w-full border-b border-ink-200 bg-ink-0/98 px-4 py-5 shadow-xl backdrop-blur-md lg:hidden"
+          className="animate-fade-in border-ink-200 bg-ink-0/98 absolute top-full left-0 w-full border-b px-4 py-5 shadow-xl backdrop-blur-md lg:hidden"
         >
           <div className="flex flex-col gap-1">
             {navItems.map((item) => {
@@ -136,10 +142,10 @@ export default function Navbar() {
               );
             })}
           </div>
-          <div className="mt-4 border-t border-ink-100 pt-4">
+          <div className="border-ink-100 mt-4 border-t pt-4">
             <Link
               href="/calcular-proyecto"
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-500 py-3.5 text-sm font-medium text-white shadow-md transition-colors hover:bg-brand-600"
+              className="bg-brand-500 hover:bg-brand-600 flex w-full items-center justify-center gap-1.5 rounded-xl py-3.5 text-sm font-medium text-white shadow-md transition-colors"
             >
               <span>Calcular Proyecto</span>
               <ArrowUpRight className="h-4 w-4" strokeWidth={2} />

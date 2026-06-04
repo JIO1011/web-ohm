@@ -1,149 +1,237 @@
 /* ──────────────────────────────────────────────────────────
- *  Consensus MVP — JSON file-based persistence
- *  Same pattern as leads-repo.ts: single JSON file + mutex.
- *  Single-process only — swap for a real DB on multi-instance deploys.
+ *  Consensus — Supabase persistence (service-role).
+ *
+ *  All DB access here uses the service-role client (RLS-bypassing) and is
+ *  therefore SERVER-ONLY. Owner-scoped mutations additionally filter by
+ *  ownerId as defense-in-depth. The public-by-code paths (getSession, addNeed)
+ *  are gated by knowing the session code + upstream Zod validation + rate limit.
+ *
+ *  Returns/throws contract:
+ *   • Functions return `null` for "not configured" or "not found" where noted.
+ *   • Callers (API routes / server components) map null → 503 / 404.
  * ────────────────────────────────────────────────────────── */
 
-import path from "node:path";
-import fs from "node:fs/promises";
+import "server-only";
+
 import { randomInt } from "node:crypto";
 import { cache } from "react";
-import type { ConsensusSession, Need, SubmitNeedPayload } from "@/features/consensus/types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import type { NeedRow, SessionRow } from "@/lib/supabase/types";
+import type {
+  ConsensusSession,
+  Need,
+  SessionSummary,
+  SubmitNeedPayload,
+} from "@/features/consensus/types";
 import { calculateScore, clampLevel, getPriority } from "@/features/consensus/scoring";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const STORE_FILE = path.join(DATA_DIR, "consensus.json");
-
-/* ── Write mutex (prevents read/write race under concurrent POSTs) ── */
-let writeLock: Promise<void> = Promise.resolve();
-
-interface Store {
-  sessions: ConsensusSession[];
+/* ── Row → domain mappers ── */
+function rowToNeed(r: NeedRow): Need {
+  return {
+    id: r.id,
+    name: r.name,
+    area: r.area,
+    category: r.category,
+    description: r.description,
+    justification: r.justification ?? "",
+    impact: r.impact,
+    urgency: r.urgency,
+    scope: r.scope,
+    score: r.score,
+    priority: r.priority,
+    submittedAt: r.submitted_at,
+  };
 }
 
-async function ensureFile(): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  try {
-    await fs.access(STORE_FILE);
-  } catch {
-    await fs.writeFile(STORE_FILE, JSON.stringify({ sessions: [] }, null, 2), "utf-8");
-  }
-}
-
-async function readStore(): Promise<Store> {
-  await ensureFile();
-  const raw = await fs.readFile(STORE_FILE, "utf-8");
-  try {
-    const parsed = JSON.parse(raw) as Store;
-    return parsed?.sessions ? parsed : { sessions: [] };
-  } catch {
-    return { sessions: [] };
-  }
-}
-
-async function writeStore(store: Store): Promise<void> {
-  await ensureFile();
-  // Atomic write: serialize to a temp file then rename, so a crash mid-write
-  // never corrupts the live store (rename is atomic on the same filesystem).
-  const tmp = `${STORE_FILE}.${process.pid}.${Date.now()}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(store, null, 2), "utf-8");
-  await fs.rename(tmp, STORE_FILE);
-}
-
-/* ── Code generation ── */
-
+/* ── Code generation (crypto-grade, no ambiguous chars) ── */
 function generateCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I to avoid confusion
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I
   let code = "";
   for (let i = 0; i < 6; i++) {
-    code += chars[randomInt(chars.length)]; // crypto-grade, unbiased
+    code += chars[randomInt(chars.length)];
   }
   return code;
 }
 
 /* ── Public API ── */
 
-export async function createSession(name: string): Promise<ConsensusSession> {
-  const release = writeLock;
-  let resolveNext!: () => void;
-  writeLock = new Promise<void>((resolve) => {
-    resolveNext = resolve;
-  });
+/** Create a session owned by `ownerId`. Returns null if Supabase is unconfigured. */
+export async function createSession(
+  name: string,
+  ownerId: string
+): Promise<ConsensusSession | null> {
+  const supabase = createAdminClient();
+  if (!supabase) return null;
 
-  try {
-    await release;
-    const store = await readStore();
-
-    // Generate unique code (retry if collision, extremely unlikely with 6 chars)
-    let code = generateCode();
-    let retries = 0;
-    while (store.sessions.some((s) => s.code === code) && retries < 10) {
-      code = generateCode();
-      retries++;
-    }
-
-    const session: ConsensusSession = {
-      code,
-      name: name.trim(),
-      createdAt: new Date().toISOString(),
-      needs: [],
-    };
-
-    store.sessions.push(session);
-    await writeStore(store);
-    return session;
-  } finally {
-    resolveNext();
+  // Generate a unique code (retry on the unlikely collision).
+  let code = generateCode();
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const { data: existing } = await supabase
+      .from("consensus_sessions")
+      .select("id")
+      .eq("code", code)
+      .maybeSingle();
+    if (!existing) break;
+    code = generateCode();
   }
+
+  const { data, error } = await supabase
+    .from("consensus_sessions")
+    .insert({ code, name: name.trim(), owner_id: ownerId })
+    .select()
+    .single();
+
+  if (error || !data) throw error ?? new Error("Insert failed");
+
+  return {
+    code: data.code,
+    name: data.name,
+    status: data.status,
+    createdAt: data.created_at,
+    needs: [],
+  };
 }
 
 /**
- * Look up a session by code. Wrapped in React `cache()` so a single request
- * (e.g. generateMetadata + the page body) reads the JSON file only once.
- * The cache is per-request, so mutations from other requests are never stale.
+ * Look up a session by code (case-insensitive) with its needs, sorted by score.
+ * Wrapped in React `cache()` so a single request reads the DB only once.
  */
 export const getSession = cache(async (code: string): Promise<ConsensusSession | null> => {
-  const store = await readStore();
-  return store.sessions.find((s) => s.code === code.toUpperCase()) ?? null;
+  const supabase = createAdminClient();
+  if (!supabase) return null;
+
+  const { data: session } = await supabase
+    .from("consensus_sessions")
+    .select()
+    .eq("code", code.toUpperCase())
+    .maybeSingle<SessionRow>();
+  if (!session) return null;
+
+  const { data: needs } = await supabase
+    .from("consensus_needs")
+    .select()
+    .eq("session_id", session.id)
+    .order("score", { ascending: false })
+    .returns<NeedRow[]>();
+
+  return {
+    code: session.code,
+    name: session.name,
+    status: session.status,
+    createdAt: session.created_at,
+    needs: (needs ?? []).map(rowToNeed),
+  };
 });
 
+/**
+ * Add a need to an open session. Returns:
+ *  • the created Need on success,
+ *  • null when Supabase is unconfigured or the session does not exist,
+ *  • throws { code: "SESSION_CLOSED" } when the session is closed.
+ */
 export async function addNeed(code: string, input: SubmitNeedPayload): Promise<Need | null> {
-  const release = writeLock;
-  let resolveNext!: () => void;
-  writeLock = new Promise<void>((resolve) => {
-    resolveNext = resolve;
-  });
+  const supabase = createAdminClient();
+  if (!supabase) return null;
 
-  try {
-    await release;
-    const store = await readStore();
-    const session = store.sessions.find((s) => s.code === code.toUpperCase());
-    if (!session) return null;
+  const { data: session } = await supabase
+    .from("consensus_sessions")
+    .select("id, status")
+    .eq("code", code.toUpperCase())
+    .maybeSingle();
+  if (!session) return null;
+  if (session.status === "closed") throw new Error("SESSION_CLOSED");
 
-    const impact = clampLevel(input.impact);
-    const urgency = clampLevel(input.urgency);
-    const scope = clampLevel(input.scope);
-    const score = calculateScore(impact, urgency, scope);
+  const impact = clampLevel(input.impact);
+  const urgency = clampLevel(input.urgency);
+  const scope = clampLevel(input.scope);
+  const score = calculateScore(impact, urgency, scope);
+  const justification = input.justification.trim();
 
-    const need: Need = {
-      id: `n_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
+  const { data, error } = await supabase
+    .from("consensus_needs")
+    .insert({
+      session_id: session.id,
       name: input.name.trim(),
       area: input.area.trim(),
       category: input.category,
       description: input.description.trim(),
-      justification: input.justification.trim(),
+      justification: justification.length > 0 ? justification : null,
       impact,
       urgency,
       scope,
       score,
       priority: getPriority(score),
-      submittedAt: new Date().toISOString(),
-    };
+    })
+    .select()
+    .single<NeedRow>();
 
-    session.needs.push(need);
-    await writeStore(store);
-    return need;
-  } finally {
-    resolveNext();
-  }
+  if (error || !data) throw error ?? new Error("Insert failed");
+  return rowToNeed(data);
+}
+
+/* ── Admin (owner-scoped) operations ── */
+
+/** List sessions owned by `ownerId`, newest first, with their need counts. */
+export async function listSessions(ownerId: string): Promise<SessionSummary[]> {
+  const supabase = createAdminClient();
+  if (!supabase) return [];
+
+  // The embedded `consensus_needs(count)` aggregate can't be inferred without
+  // hand-written relationship metadata, so we assert the row shape explicitly.
+  type SessionListRow = {
+    code: string;
+    name: string;
+    status: "open" | "closed";
+    created_at: string;
+    consensus_needs: { count: number }[];
+  };
+
+  const { data, error } = await supabase
+    .from("consensus_sessions")
+    .select("code, name, status, created_at, consensus_needs(count)")
+    .eq("owner_id", ownerId)
+    .order("created_at", { ascending: false })
+    .returns<SessionListRow[]>();
+
+  if (error || !data) return [];
+
+  return data.map((s) => ({
+    code: s.code,
+    name: s.name,
+    status: s.status,
+    createdAt: s.created_at,
+    needCount: s.consensus_needs[0]?.count ?? 0,
+  }));
+}
+
+/** Set a session's status. Filters by ownerId so one admin can't touch another's. */
+export async function setSessionStatus(
+  code: string,
+  ownerId: string,
+  status: "open" | "closed"
+): Promise<boolean> {
+  const supabase = createAdminClient();
+  if (!supabase) return false;
+
+  const { error, count } = await supabase
+    .from("consensus_sessions")
+    .update({ status }, { count: "exact" })
+    .eq("code", code.toUpperCase())
+    .eq("owner_id", ownerId);
+
+  return !error && (count ?? 0) > 0;
+}
+
+/** Delete a session (cascades to its needs). Owner-scoped. */
+export async function deleteSession(code: string, ownerId: string): Promise<boolean> {
+  const supabase = createAdminClient();
+  if (!supabase) return false;
+
+  const { error, count } = await supabase
+    .from("consensus_sessions")
+    .delete({ count: "exact" })
+    .eq("code", code.toUpperCase())
+    .eq("owner_id", ownerId);
+
+  return !error && (count ?? 0) > 0;
 }

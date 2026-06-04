@@ -75,11 +75,23 @@ export interface Need {
   submittedAt: string; // ISO
 }
 
+export type SessionStatus = "open" | "closed";
+
 export interface ConsensusSession {
   code: string; // 6-char alphanumeric e.g. "AB12CD"
   name: string; // human-readable session name
+  status: SessionStatus;
   createdAt: string; // ISO
   needs: Need[];
+}
+
+/** Lightweight session row for the admin "Mis sesiones" list. */
+export interface SessionSummary {
+  code: string;
+  name: string;
+  status: SessionStatus;
+  createdAt: string;
+  needCount: number;
 }
 
 /* ── API payloads ── */
@@ -117,7 +129,7 @@ export interface SessionStats {
 }
 
 export interface DashboardResponse {
-  session: { code: string; name: string; createdAt: string };
+  session: { code: string; name: string; status: SessionStatus; createdAt: string };
   needs: Need[];
   stats: SessionStats;
 }
