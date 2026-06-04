@@ -131,7 +131,6 @@ export default function CalculatorLanding() {
 
       {/* ── Main content ── */}
       <div className="relative mx-auto w-full max-w-6xl px-5 pt-20 pb-10 sm:px-6 lg:px-8 lg:pt-16 lg:pb-8">
-
         {/* ── Row 1: copy + orb cluster ── */}
         <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-2 lg:gap-6">
           <motion.div variants={container} initial={reduce ? false : "hidden"} animate="show">
@@ -145,7 +144,7 @@ export default function CalculatorLanding() {
 
             <motion.h1
               variants={item}
-              className="font-outfit mt-3 text-4xl font-extrabold leading-[1.05] tracking-tight text-[#1b2348] sm:text-5xl lg:text-[3rem]"
+              className="font-outfit mt-3 text-4xl leading-[1.05] font-extrabold tracking-tight text-[#1b2348] sm:text-5xl lg:text-[3rem]"
             >
               Calcula tu proyecto,{" "}
               <span className="relative whitespace-nowrap text-[#ff6b4a]">
@@ -208,9 +207,30 @@ export default function CalculatorLanding() {
               </span>
             </div>
             <div className="absolute top-1/2 left-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-[#3b82f6]/20" />
-            <FloatChip className="top-2 left-0"   delay="0s"   tint="#22c197" Icon={ShieldCheck} title="Alcance"  value="Por escrito"  />
-            <FloatChip className="top-10 right-0" delay="1.1s" tint="#3b82f6" Icon={Clock}       title="Tiempo"   value="3-7 semanas" />
-            <FloatChip className="bottom-4 left-6" delay="2s"  tint="#ff6b4a" Icon={LineChart}   title="Estimado" value="USD 2.8k"    />
+            <FloatChip
+              className="top-2 left-0"
+              delay="0s"
+              tint="#22c197"
+              Icon={ShieldCheck}
+              title="Alcance"
+              value="Por escrito"
+            />
+            <FloatChip
+              className="top-10 right-0"
+              delay="1.1s"
+              tint="#3b82f6"
+              Icon={Clock}
+              title="Tiempo"
+              value="3-7 semanas"
+            />
+            <FloatChip
+              className="bottom-4 left-6"
+              delay="2s"
+              tint="#ff6b4a"
+              Icon={LineChart}
+              title="Estimado"
+              value="USD 2.8k"
+            />
           </motion.div>
         </div>
 
@@ -250,8 +270,14 @@ export default function CalculatorLanding() {
               className="group relative flex h-full min-h-[200px] flex-col justify-between overflow-hidden rounded-3xl p-6 text-white shadow-[0_24px_60px_-20px_rgba(255,107,74,0.55)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_32px_70px_-18px_rgba(255,107,74,0.7)] active:scale-[0.98] sm:p-7"
               style={{ backgroundImage: "linear-gradient(135deg, #ff8a63 0%, #ff4e6a 100%)" }}
             >
-              <div aria-hidden="true" className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/20 blur-2xl" />
-              <div aria-hidden="true" className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-[#ff4e6a]/40 blur-2xl" />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/20 blur-2xl"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-[#ff4e6a]/40 blur-2xl"
+              />
               <div className="relative">
                 <div className="flex items-center gap-3">
                   <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
@@ -261,7 +287,7 @@ export default function CalculatorLanding() {
                     Disponible ahora
                   </span>
                 </div>
-                <h2 className="font-outfit mt-4 text-xl font-extrabold leading-snug tracking-tight sm:text-2xl">
+                <h2 className="font-outfit mt-4 text-xl leading-snug font-extrabold tracking-tight sm:text-2xl">
                   Presupuestador de software
                 </h2>
                 <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/80">
@@ -272,7 +298,10 @@ export default function CalculatorLanding() {
               <div className="relative mt-5 flex items-center justify-between">
                 <span className="inline-flex items-center gap-2 text-sm font-bold">
                   Calcular mi proyecto
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+                  <ArrowRight
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    strokeWidth={2.5}
+                  />
                 </span>
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15">
                   <Zap className="h-4 w-4" strokeWidth={2} />
@@ -284,7 +313,7 @@ export default function CalculatorLanding() {
           {/* Character column — desktop only (hidden on mobile/tablet) */}
           <motion.div
             variants={cardItem}
-            className="relative z-20 hidden items-center justify-center lg:flex lg:-translate-y-[70px] lg:translate-x-[140px]"
+            className="pointer-events-none relative z-20 hidden items-center justify-center lg:flex lg:translate-x-[140px] lg:-translate-y-[70px]"
           >
             <Image
               src="/image.png"
@@ -304,8 +333,14 @@ export default function CalculatorLanding() {
               className="group relative flex h-full min-h-[200px] flex-col justify-between overflow-hidden rounded-3xl p-6 text-white shadow-[0_24px_60px_-20px_rgba(27,35,72,0.55)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_32px_70px_-18px_rgba(59,130,246,0.5)] active:scale-[0.98] sm:p-7"
               style={{ backgroundImage: "linear-gradient(135deg, #1b2348 0%, #243b8a 100%)" }}
             >
-              <div aria-hidden="true" className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-[#3b82f6]/20 blur-2xl" />
-              <div aria-hidden="true" className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-[#818cf8]/15 blur-2xl" />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-[#3b82f6]/20 blur-2xl"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-[#818cf8]/15 blur-2xl"
+              />
               <div className="relative">
                 <div className="flex items-center gap-3">
                   <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
@@ -315,7 +350,7 @@ export default function CalculatorLanding() {
                     Beta · Gratis
                   </span>
                 </div>
-                <h2 className="font-outfit mt-4 text-xl font-extrabold leading-snug tracking-tight text-white sm:text-2xl">
+                <h2 className="font-outfit mt-4 text-xl leading-snug font-extrabold tracking-tight text-white sm:text-2xl">
                   Consensus
                 </h2>
                 <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/80">

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { addNeed, getSession } from "@/features/consensus/consensus-repo";
-import { computeStats } from "@/features/consensus/scoring";
+import { addNeed, getSession } from "@/lib/consensus-repo";
+import { computeStats, sortByScore } from "@/features/consensus/scoring";
 import { CATEGORIES } from "@/features/consensus/types";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
@@ -19,10 +19,7 @@ const NeedBody = z.object({
 });
 
 /* ── POST: submit a need ── */
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ code: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
 
   const ip = getClientIp(req.headers);
@@ -63,11 +60,17 @@ export async function POST(
 }
 
 /* ── GET: fetch session data + stats ── */
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ code: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
+
+  const ip = getClientIp(req.headers);
+  const limit = rateLimit(`consensus-results:${ip}`, { limit: 120, windowMs: 60_000 });
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Demasiadas solicitudes. Intenta en un minuto." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(limit.resetInMs / 1000)) } }
+    );
+  }
 
   try {
     const session = await getSession(code);
@@ -75,7 +78,7 @@ export async function GET(
       return NextResponse.json({ error: "Sesión no encontrada." }, { status: 404 });
     }
 
-    const sortedNeeds = [...session.needs].sort((a, b) => b.score - a.score);
+    const sortedNeeds = sortByScore(session.needs);
     const stats = computeStats(session.needs);
 
     return NextResponse.json({

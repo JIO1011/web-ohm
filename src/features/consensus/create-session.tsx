@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { QRCodeSVG } from "qrcode.react";
 import {
   ArrowRight,
   BrainCircuit,
@@ -15,83 +16,20 @@ import {
 } from "lucide-react";
 import type { CreateSessionResponse } from "./types";
 
-/* ── Inline QR code generator (SVG, no external deps) ── */
-function generateQRMatrix(text: string): boolean[][] {
-  // Minimal QR-like pattern using a simple encoding visualization.
-  // For a real QR code in production, swap with a tiny library.
-  // This creates a deterministic dot pattern from the text hash.
-  const size = 21;
-  const matrix: boolean[][] = Array.from({ length: size }, () =>
-    Array.from({ length: size }, () => false)
-  );
-
-  // Position patterns (top-left, top-right, bottom-left)
-  const drawFinder = (startRow: number, startCol: number) => {
-    for (let r = 0; r < 7; r++) {
-      for (let c = 0; c < 7; c++) {
-        const isOuter = r === 0 || r === 6 || c === 0 || c === 6;
-        const isInner = r >= 2 && r <= 4 && c >= 2 && c <= 4;
-        matrix[startRow + r]![startCol + c] = isOuter || isInner;
-      }
-    }
-  };
-  drawFinder(0, 0);
-  drawFinder(0, size - 7);
-  drawFinder(size - 7, 0);
-
-  // Timing patterns
-  for (let i = 7; i < size - 7; i++) {
-    matrix[6]![i] = i % 2 === 0;
-    matrix[i]![6] = i % 2 === 0;
-  }
-
-  // Data area — fill with deterministic pattern from text
-  let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
-  }
-  let seed = Math.abs(hash);
-  for (let r = 8; r < size - 8; r++) {
-    for (let c = 8; c < size - 8; c++) {
-      if (r === 6 || c === 6) continue;
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-      matrix[r]![c] = seed % 3 !== 0;
-    }
-  }
-
-  return matrix;
-}
-
+/* ── Real, scannable QR code (qrcode.react → SVG) ── */
 function QRCode({ text, size = 140 }: { text: string; size?: number }) {
-  const matrix = generateQRMatrix(text);
-  const cellSize = size / matrix.length;
-
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
+    <QRCodeSVG
+      value={text}
+      size={size}
+      level="M"
+      bgColor="#ffffff"
+      fgColor="#0f172a"
+      marginSize={2}
       className="rounded-xl"
       role="img"
-      aria-label={`QR code para ${text}`}
-    >
-      <rect width={size} height={size} fill="white" rx="8" />
-      {matrix.map((row, r) =>
-        row.map((cell, c) =>
-          cell ? (
-            <rect
-              key={`${r}-${c}`}
-              x={c * cellSize + 1}
-              y={r * cellSize + 1}
-              width={cellSize - 0.5}
-              height={cellSize - 0.5}
-              fill="#0f172a"
-              rx={1}
-            />
-          ) : null
-        )
-      )}
-    </svg>
+      aria-label={`Código QR para unirse a la sesión: ${text}`}
+    />
   );
 }
 
@@ -118,6 +56,14 @@ export default function CreateSession() {
   /* Copy feedback */
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const copyTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  /* Clear the pending copy-feedback timeout on unmount. */
+  useEffect(
+    () => () => {
+      if (copyTimeout.current) clearTimeout(copyTimeout.current);
+    },
+    []
+  );
 
   const copyToClipboard = async (text: string, field: string) => {
     try {
@@ -191,10 +137,8 @@ export default function CreateSession() {
         <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-[#e7eaf3] bg-white p-6 shadow-[0_18px_50px_-24px_rgba(15,23,42,0.25)] sm:p-10">
             {/* Session name */}
-            <p className="text-xs font-semibold tracking-wide text-[#94a3b8] uppercase">
-              Sesión
-            </p>
-            <p className="mt-1 font-outfit text-xl font-bold text-[#0f172a]">
+            <p className="text-xs font-semibold tracking-wide text-[#94a3b8] uppercase">Sesión</p>
+            <p className="font-outfit mt-1 text-xl font-bold text-[#0f172a]">
               {createdSession.name}
             </p>
 
@@ -331,8 +275,8 @@ export default function CreateSession() {
               Descubre las necesidades reales de tu equipo.
             </h1>
             <p className="max-w-2xl text-lg leading-relaxed text-[#64748b]">
-              Crea una sesión, comparte el código y obtén una matriz priorizada automáticamente.
-              Sin registro, sin configuración, en minutos.
+              Crea una sesión, comparte el código y obtén una matriz priorizada automáticamente. Sin
+              registro, sin configuración, en minutos.
             </p>
           </div>
         </div>
@@ -348,9 +292,7 @@ export default function CreateSession() {
                 <Plus className="h-5 w-5 text-[#2f6bff]" strokeWidth={2} />
               </span>
               <div>
-                <h2 className="font-outfit text-lg font-bold text-[#0f172a]">
-                  Crear sesión
-                </h2>
+                <h2 className="font-outfit text-lg font-bold text-[#0f172a]">Crear sesión</h2>
                 <p className="text-xs text-[#94a3b8]">Empieza a recopilar necesidades</p>
               </div>
             </div>
@@ -431,10 +373,7 @@ export default function CreateSession() {
 
             <div className="mt-6 space-y-4">
               <div className="space-y-1.5">
-                <label
-                  htmlFor="join-code"
-                  className="block text-sm font-semibold text-[#334155]"
-                >
+                <label htmlFor="join-code" className="block text-sm font-semibold text-[#334155]">
                   Código de sesión
                 </label>
                 <input
@@ -444,7 +383,7 @@ export default function CreateSession() {
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                   onKeyDown={(e) => e.key === "Enter" && handleJoin()}
-                  className={`${inputBase} font-mono text-center text-lg tracking-[0.2em] uppercase`}
+                  className={`${inputBase} text-center font-mono text-lg tracking-[0.2em] uppercase`}
                   maxLength={8}
                 />
               </div>

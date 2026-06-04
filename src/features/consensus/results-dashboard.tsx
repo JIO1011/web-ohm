@@ -13,9 +13,9 @@ import {
   AlertTriangle,
   TrendingUp,
   Users,
-  Zap,
 } from "lucide-react";
-import type { Category, DashboardResponse, Need } from "./types";
+import type { LucideIcon } from "lucide-react";
+import type { Category, DashboardResponse } from "./types";
 import { CATEGORIES, CATEGORY_LABELS, PRIORITY_META } from "./types";
 import { exportToCSV } from "./scoring";
 
@@ -35,7 +35,7 @@ function StatCard({
 }: {
   label: string;
   value: string | number;
-  Icon: typeof Zap;
+  Icon: LucideIcon;
   iconBg: string;
   iconColor: string;
 }) {
@@ -99,7 +99,8 @@ export default function ResultsDashboard({
 }) {
   const [data, setData] = useState<DashboardResponse | null>(initialData);
   const [isLoading, setIsLoading] = useState(!initialData);
-  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  // Null on first render so server and client HTML match; set after mount.
+  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<Category | "all">("all");
   const [copiedLink, setCopiedLink] = useState(false);
@@ -119,10 +120,13 @@ export default function ResultsDashboard({
     }
   }, [sessionCode]);
 
-  /* Polling every 10 seconds */
+  /* Polling every 10s — skips ticks while the tab is hidden to save disk/network. */
   useEffect(() => {
     if (!initialData) fetchData();
-    const interval = setInterval(fetchData, 10_000);
+    else setLastRefresh(new Date());
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") fetchData();
+    }, 10_000);
     return () => clearInterval(interval);
   }, [fetchData, initialData]);
 
@@ -216,7 +220,8 @@ export default function ResultsDashboard({
                 {sessionName}
               </h1>
               <p className="text-sm text-[#94a3b8]">
-                Última actualización: {lastRefresh.toLocaleTimeString("es-ES")} ·{" "}
+                Última actualización: {lastRefresh ? lastRefresh.toLocaleTimeString("es-ES") : "—"}{" "}
+                ·{" "}
                 <button
                   type="button"
                   onClick={fetchData}
@@ -415,9 +420,7 @@ export default function ResultsDashboard({
                             <p className="truncate text-sm font-medium text-[#0f172a]">
                               {need.description}
                             </p>
-                            <p className="mt-0.5 truncate text-xs text-[#94a3b8]">
-                              {need.name}
-                            </p>
+                            <p className="mt-0.5 truncate text-xs text-[#94a3b8]">{need.name}</p>
                           </td>
                           <td className="px-4 py-3 text-xs text-[#64748b]">{need.area}</td>
                           <td className="px-4 py-3 text-center font-mono text-xs text-[#334155]">

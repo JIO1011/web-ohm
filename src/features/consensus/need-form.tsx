@@ -63,10 +63,13 @@ function SliderField({
   description: string;
   accentColor: string;
 }) {
+  const sliderId = `consensus-slider-${label.toLowerCase()}`;
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-semibold text-[#334155]">{label}</label>
+        <label htmlFor={sliderId} className="text-sm font-semibold text-[#334155]">
+          {label}
+        </label>
         <span
           className="rounded-full px-2.5 py-0.5 text-xs font-bold"
           style={{ backgroundColor: `${accentColor}15`, color: accentColor }}
@@ -77,12 +80,14 @@ function SliderField({
       <p className="text-xs text-[#94a3b8]">{description}</p>
       <div className="relative pt-1">
         <input
+          id={sliderId}
           type="range"
           min={1}
           max={5}
           step={1}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
+          aria-valuetext={`${value} de 5 · ${SLIDER_LABELS[value]}`}
           className="consensus-slider h-2 w-full cursor-pointer appearance-none rounded-full bg-[#eef1f7] outline-none"
           style={
             {
@@ -225,6 +230,8 @@ export default function NeedForm({
 
   /* ── Success screen ── */
   if (submittedNeed) {
+    // Use the server-confirmed priority, not the live slider-derived one.
+    const submittedMeta = PRIORITY_META[submittedNeed.priority];
     return (
       <div className="bg-[#f6f7fb] pb-28 text-[#0f172a]">
         <section className="relative overflow-hidden pt-10 pb-10 sm:pt-14 sm:pb-12">
@@ -258,9 +265,9 @@ export default function NeedForm({
                   {submittedNeed.description.length > 60 ? "…" : ""}
                 </h3>
                 <span
-                  className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${priorityMeta.bg} ${priorityMeta.text} ${priorityMeta.border}`}
+                  className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${submittedMeta.bg} ${submittedMeta.text} ${submittedMeta.border}`}
                 >
-                  {priorityMeta.emoji} {priorityMeta.label}
+                  {submittedMeta.emoji} {submittedMeta.label}
                 </span>
               </div>
 
@@ -402,7 +409,7 @@ export default function NeedForm({
 
               {/* Category selector */}
               <div className="space-y-1.5">
-                <label className="block text-sm font-semibold text-[#334155]">Categoría</label>
+                <span className="block text-sm font-semibold text-[#334155]">Categoría</span>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
                   {CATEGORIES.map((cat) => {
                     const Icon = CATEGORY_ICONS[cat];
@@ -465,9 +472,7 @@ export default function NeedForm({
                   maxLength={500}
                   rows={3}
                 />
-                <p className="text-right text-[10px] text-[#c4cad8]">
-                  {justification.length}/500
-                </p>
+                <p className="text-right text-[10px] text-[#c4cad8]">{justification.length}/500</p>
               </div>
             </div>
 

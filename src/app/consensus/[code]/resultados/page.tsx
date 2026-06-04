@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSession } from "@/features/consensus/consensus-repo";
-import { computeStats } from "@/features/consensus/scoring";
+import { getSession } from "@/lib/consensus-repo";
+import { computeStats, sortByScore } from "@/features/consensus/scoring";
 import type { DashboardResponse } from "@/features/consensus/types";
 import ResultsDashboard from "@/features/consensus/results-dashboard";
 
@@ -30,7 +30,7 @@ export default async function ConsensusResultsPage({ params }: Props) {
     notFound();
   }
 
-  const sortedNeeds = [...session.needs].sort((a, b) => b.score - a.score);
+  const sortedNeeds = sortByScore(session.needs);
   const stats = computeStats(session.needs);
 
   const initialData: DashboardResponse = {

@@ -5,13 +5,14 @@
 import type { Priority, ConsensusSession, Need, Category, SessionStats } from "./types";
 import { CATEGORIES, CATEGORY_LABELS, PRIORITY_META } from "./types";
 
+/** Clamp a raw priority input to an integer in [1, 5]. Single source of truth. */
+export function clampLevel(n: number): number {
+  return Math.max(1, Math.min(5, Math.round(n)));
+}
+
 /** P = Impact × Urgency × Scope   (max 125) */
 export function calculateScore(impact: number, urgency: number, scope: number): number {
-  return Math.round(
-    Math.max(1, Math.min(5, impact)) *
-      Math.max(1, Math.min(5, urgency)) *
-      Math.max(1, Math.min(5, scope))
-  );
+  return clampLevel(impact) * clampLevel(urgency) * clampLevel(scope);
 }
 
 /** Map a numeric score to a named priority level. */
@@ -22,11 +23,17 @@ export function getPriority(score: number): Priority {
   return "baja";
 }
 
+/** Return needs sorted by score, highest first (does not mutate the input). */
+export function sortByScore(needs: Need[]): Need[] {
+  return [...needs].sort((a, b) => b.score - a.score);
+}
+
 /** Compute aggregate stats for a session's needs. */
 export function computeStats(needs: Need[]): SessionStats {
-  const categoryDistribution = Object.fromEntries(
-    CATEGORIES.map((c) => [c, 0])
-  ) as Record<Category, number>;
+  const categoryDistribution = Object.fromEntries(CATEGORIES.map((c) => [c, 0])) as Record<
+    Category,
+    number
+  >;
 
   let criticalCount = 0;
   let highCount = 0;
@@ -81,10 +88,15 @@ export function exportToCSV(session: ConsensusSession): string {
     "Fecha",
   ].join(",");
 
-  const sorted = [...session.needs].sort((a, b) => b.score - a.score);
+  const sorted = sortByScore(session.needs);
 
   const rows = sorted.map((n, i) => {
-    const escape = (s: string) => `"${s.replace(/"/g, '""')}"`;
+    // Quote-wrap and neutralize spreadsheet formula injection: a leading
+    // = + - @ (or tab/CR) is prefixed with ' so Excel/Sheets treats it as text.
+    const escape = (s: string) => {
+      const safe = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s;
+      return `"${safe.replace(/"/g, '""')}"`;
+    };
     const meta = PRIORITY_META[n.priority];
     return [
       i + 1,

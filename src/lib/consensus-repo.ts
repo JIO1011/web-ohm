@@ -1,12 +1,15 @@
 /* ──────────────────────────────────────────────────────────
  *  Consensus MVP — JSON file-based persistence
  *  Same pattern as leads-repo.ts: single JSON file + mutex.
+ *  Single-process only — swap for a real DB on multi-instance deploys.
  * ────────────────────────────────────────────────────────── */
 
 import path from "node:path";
 import fs from "node:fs/promises";
-import type { ConsensusSession, Need, SubmitNeedPayload } from "./types";
-import { calculateScore, getPriority } from "./scoring";
+import { randomInt } from "node:crypto";
+import { cache } from "react";
+import type { ConsensusSession, Need, SubmitNeedPayload } from "@/features/consensus/types";
+import { calculateScore, clampLevel, getPriority } from "@/features/consensus/scoring";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const STORE_FILE = path.join(DATA_DIR, "consensus.json");
@@ -40,7 +43,11 @@ async function readStore(): Promise<Store> {
 
 async function writeStore(store: Store): Promise<void> {
   await ensureFile();
-  await fs.writeFile(STORE_FILE, JSON.stringify(store, null, 2), "utf-8");
+  // Atomic write: serialize to a temp file then rename, so a crash mid-write
+  // never corrupts the live store (rename is atomic on the same filesystem).
+  const tmp = `${STORE_FILE}.${process.pid}.${Date.now()}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(store, null, 2), "utf-8");
+  await fs.rename(tmp, STORE_FILE);
 }
 
 /* ── Code generation ── */
@@ -49,7 +56,7 @@ function generateCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I to avoid confusion
   let code = "";
   for (let i = 0; i < 6; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
+    code += chars[randomInt(chars.length)]; // crypto-grade, unbiased
   }
   return code;
 }
@@ -90,15 +97,17 @@ export async function createSession(name: string): Promise<ConsensusSession> {
   }
 }
 
-export async function getSession(code: string): Promise<ConsensusSession | null> {
+/**
+ * Look up a session by code. Wrapped in React `cache()` so a single request
+ * (e.g. generateMetadata + the page body) reads the JSON file only once.
+ * The cache is per-request, so mutations from other requests are never stale.
+ */
+export const getSession = cache(async (code: string): Promise<ConsensusSession | null> => {
   const store = await readStore();
   return store.sessions.find((s) => s.code === code.toUpperCase()) ?? null;
-}
+});
 
-export async function addNeed(
-  code: string,
-  input: SubmitNeedPayload
-): Promise<Need | null> {
+export async function addNeed(code: string, input: SubmitNeedPayload): Promise<Need | null> {
   const release = writeLock;
   let resolveNext!: () => void;
   writeLock = new Promise<void>((resolve) => {
@@ -111,7 +120,10 @@ export async function addNeed(
     const session = store.sessions.find((s) => s.code === code.toUpperCase());
     if (!session) return null;
 
-    const score = calculateScore(input.impact, input.urgency, input.scope);
+    const impact = clampLevel(input.impact);
+    const urgency = clampLevel(input.urgency);
+    const scope = clampLevel(input.scope);
+    const score = calculateScore(impact, urgency, scope);
 
     const need: Need = {
       id: `n_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
@@ -120,9 +132,9 @@ export async function addNeed(
       category: input.category,
       description: input.description.trim(),
       justification: input.justification.trim(),
-      impact: Math.max(1, Math.min(5, Math.round(input.impact))),
-      urgency: Math.max(1, Math.min(5, Math.round(input.urgency))),
-      scope: Math.max(1, Math.min(5, Math.round(input.scope))),
+      impact,
+      urgency,
+      scope,
       score,
       priority: getPriority(score),
       submittedAt: new Date().toISOString(),

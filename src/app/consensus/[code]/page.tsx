@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSession } from "@/features/consensus/consensus-repo";
+import { getSession } from "@/lib/consensus-repo";
 import NeedForm from "@/features/consensus/need-form";
 
 interface Props {
