@@ -174,6 +174,13 @@ const btnGhost =
 export default function ContactSection() {
   const searchParams = useSearchParams();
   const presetService = searchParams.get("service");
+  // The /servicios catalog deep-links with the full service title, which may not
+  // be one of SERVICE_TYPES (it covers hardware/mechanical too). Surface it as a
+  // valid option so the <select> reflects the real choice instead of a stale value.
+  const serviceOptions: readonly string[] =
+    presetService && !(SERVICE_TYPES as readonly string[]).includes(presetService)
+      ? [...SERVICE_TYPES, presetService]
+      : SERVICE_TYPES;
   const presetTab = searchParams.get("tab") as WizardTab | null;
   const validTabs: ReadonlySet<WizardTab> = new Set(["planificador", "agenda", "contacto"]);
   const initialTab: WizardTab = presetTab && validTabs.has(presetTab) ? presetTab : "planificador";
@@ -823,7 +830,7 @@ Notas y contexto adicional: `;
                           onChange={(e) => setServiceType(e.target.value)}
                           className="w-full cursor-pointer rounded-2xl border border-[#e7eaf3] bg-white px-3.5 py-2.5 text-sm text-[#0f172a] transition-colors focus:border-[#2f6bff] focus:ring-2 focus:ring-[#2f6bff]/20 focus:outline-none"
                         >
-                          {SERVICE_TYPES.map((opt) => (
+                          {serviceOptions.map((opt) => (
                             <option key={opt} value={opt}>
                               {opt}
                             </option>

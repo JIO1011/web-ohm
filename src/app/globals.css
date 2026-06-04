@@ -43,9 +43,9 @@
   --color-warning: oklch(0.76 0.155 75);
   --color-info: oklch(0.7 0.11 230);
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -62,7 +62,7 @@
   /* Friendly geometric display face used only by the standalone calculator
      (/calcular-proyecto). Kept out of the OhmRoyal token system on purpose. */
   .font-outfit {
-    font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   }
 }
 

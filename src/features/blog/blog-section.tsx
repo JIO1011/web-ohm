@@ -50,6 +50,9 @@ type Category = (typeof CATEGORIES)[number];
 const BADGE_ON_IMAGE = "bg-white/90 text-ink-900 shadow-sm backdrop-blur-sm";
 const BADGE_ON_SURFACE = "bg-ink-900 text-white";
 
+/* "Lo más leído" ranks by engagement (likes desc), not raw array order. */
+const TRENDING_POSTS = [...blogPosts].sort((a, b) => b.likes - a.likes).slice(0, 3);
+
 function PostVisual({
   id,
   category,
@@ -326,7 +329,7 @@ export default function BlogSection() {
         </div>
 
         <ScrollReveal className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {blogPosts.slice(0, 3).map((post, idx) => (
+          {TRENDING_POSTS.map((post, idx) => (
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
@@ -398,11 +401,17 @@ export default function BlogSection() {
             const hasLiked: boolean = likedList.includes(post.id);
 
             return (
-              <Link
+              <div
                 key={post.id}
-                href={`/blog/${post.slug}`}
-                className="group border-ink-200 hover:border-ink-300 flex cursor-pointer flex-col overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+                className="group border-ink-200 hover:border-ink-300 relative flex flex-col overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
               >
+                {/* Stretched-link overlay: whole card navigates, but the like/share
+                    buttons stay interactive (no invalid <button> inside <a>). */}
+                <Link
+                  href={`/blog/${post.slug}`}
+                  aria-label={post.title}
+                  className="absolute inset-0 z-10"
+                />
                 <div className="border-ink-100 relative h-36 w-full overflow-hidden border-b">
                   <PostVisual id={post.id} category={post.category} className="h-full w-full" />
                   <span
@@ -430,7 +439,7 @@ export default function BlogSection() {
                     <span className="text-ink-700 block max-w-[80px] truncate text-xs font-semibold">
                       {post.author.name.split(" ")[0]}
                     </span>
-                    <div className="flex items-center gap-2.5">
+                    <div className="relative z-20 flex items-center gap-2.5">
                       <button
                         type="button"
                         onClick={(e) => handleLike(e, post.id)}
@@ -460,7 +469,7 @@ export default function BlogSection() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

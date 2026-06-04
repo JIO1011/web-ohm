@@ -286,7 +286,6 @@ export const blogPosts: BlogPost[] = [
     author: {
       name: "Alejandro Ruiz",
       role: "DevOps Engineer",
-      avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-05-18",
     readTime: "6 min",
@@ -305,7 +304,6 @@ export const blogPosts: BlogPost[] = [
     author: {
       name: "Sofía Castillo",
       role: "ML Engineer",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-04-30",
     readTime: "8 min",
@@ -324,7 +322,6 @@ export const blogPosts: BlogPost[] = [
     author: {
       name: "Mauricio Fernández",
       role: "Frontend Engineer",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-03-12",
     readTime: "5 min",
@@ -343,7 +340,6 @@ export const blogPosts: BlogPost[] = [
     author: {
       name: "Carlos Mendoza",
       role: "Security Engineer",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
     },
     date: "2026-02-25",
     readTime: "7 min",

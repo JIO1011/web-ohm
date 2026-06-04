@@ -19,34 +19,29 @@ import {
   Workflow,
   Wrench,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 import { servicesData } from "@/data/mock-data";
 import type { Service } from "@/types";
 
 const BEZIER = "cubic-bezier(0.23, 1, 0.32, 1)";
 
+/* Data-driven icon lookup: a service declares its icon by name in mock-data.
+   Register a new icon here in one line — there is no switch to keep in sync. */
+const ICON_MAP: Record<string, LucideIcon> = {
+  Code,
+  BrainCircuit,
+  Shield,
+  CircuitBoard,
+  Cog,
+  Wrench,
+  Boxes,
+  Hammer,
+};
+
 function renderIcon(name: string, className = "h-5 w-5") {
-  const props = { className, strokeWidth: 1.5 as number };
-  switch (name) {
-    case "Code":
-      return <Code {...props} />;
-    case "BrainCircuit":
-      return <BrainCircuit {...props} />;
-    case "Shield":
-      return <Shield {...props} />;
-    case "CircuitBoard":
-      return <CircuitBoard {...props} />;
-    case "Cog":
-      return <Cog {...props} />;
-    case "Wrench":
-      return <Wrench {...props} />;
-    case "Boxes":
-      return <Boxes {...props} />;
-    case "Hammer":
-      return <Hammer {...props} />;
-    default:
-      return <Code {...props} />;
-  }
+  const Icon = ICON_MAP[name] ?? Code;
+  return <Icon className={className} strokeWidth={1.5} />;
 }
 
 const PHASES = [
@@ -332,9 +327,9 @@ export default function ServicesSection() {
                       Qué entregamos
                     </h4>
                     <ul className="space-y-2.5">
-                      {active.benefits.map((benefit, idx) => (
+                      {active.benefits.map((benefit) => (
                         <li
-                          key={idx}
+                          key={benefit}
                           className="text-ink-300 flex items-start gap-2.5 text-sm leading-relaxed"
                         >
                           <Check
@@ -351,9 +346,9 @@ export default function ServicesSection() {
                       Problemas que abordamos
                     </h4>
                     <ul className="space-y-2.5">
-                      {active.problemsSolved.map((problem, idx) => (
+                      {active.problemsSolved.map((problem) => (
                         <li
-                          key={idx}
+                          key={problem}
                           className="text-ink-400 flex items-start gap-2.5 text-sm leading-relaxed"
                         >
                           <span
@@ -374,7 +369,7 @@ export default function ServicesSection() {
                   <div className="flex flex-wrap gap-1.5">
                     {active.technologies.map((tech, idx) => (
                       <span
-                        key={idx}
+                        key={`${tech}-${idx}`}
                         className="border-ink-700 bg-ink-800 text-ink-300 rounded-md border px-2.5 py-1 font-mono text-xs"
                       >
                         {tech}

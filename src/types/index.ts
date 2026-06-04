@@ -33,7 +33,6 @@ export interface BlogPost {
   author: {
     name: string;
     role: string;
-    avatar: string;
   };
   date: string;
   readTime: string;

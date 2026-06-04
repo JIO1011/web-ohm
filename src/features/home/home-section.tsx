@@ -199,7 +199,7 @@ export default function HomeSection() {
           {/* 2 featured cards — larger */}
           <div className="mb-5 grid grid-cols-1 gap-5 md:grid-cols-2">
             {FEATURED_SERVICES.map(({ Icon, title, body }, idx) => (
-              <ScrollReveal key={idx} delay={idx * 0.08}>
+              <ScrollReveal key={title} delay={idx * 0.08}>
                 <div
                   className="group border-ink-200 bg-ink-50 hover:border-ink-300 rounded-2xl border p-8 transition-all duration-300 hover:shadow-lg sm:p-10"
                   style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
@@ -217,7 +217,7 @@ export default function HomeSection() {
           {/* 4 compact cards */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {COMPACT_SERVICES.map(({ Icon, title, body }, idx) => (
-              <ScrollReveal key={idx} delay={idx * 0.06}>
+              <ScrollReveal key={title} delay={idx * 0.06}>
                 <div
                   className="group border-ink-200 bg-ink-50 hover:border-ink-300 rounded-2xl border p-6 transition-all duration-300 hover:shadow-md"
                   style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
@@ -274,7 +274,7 @@ export default function HomeSection() {
             {/* Trust principles — the "why" */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-span-7">
               {DIFFERENTIATORS.map(({ Icon, title, body }, idx) => (
-                <ScrollReveal key={idx} delay={idx * 0.07}>
+                <ScrollReveal key={title} delay={idx * 0.07}>
                   <div
                     className="group border-ink-200 hover:border-ink-300 h-full rounded-2xl border bg-white p-6 transition-all duration-300 hover:shadow-md"
                     style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
@@ -336,7 +336,7 @@ export default function HomeSection() {
           </div>
           <dl className="divide-ink-800 border-ink-800 mt-8 grid grid-cols-2 divide-x divide-y border-y lg:grid-cols-4 lg:divide-y-0">
             {STATS.map((stat, i) => (
-              <ScrollReveal key={i} delay={i * 0.06}>
+              <ScrollReveal key={stat.label} delay={i * 0.06}>
                 <div className="hover:bg-ink-800/50 flex flex-col gap-2 px-8 py-12 text-center transition-colors duration-300">
                   <dt className="text-ink-400 order-2 text-sm leading-relaxed">{stat.label}</dt>
                   <dd className="font-display order-1 text-4xl font-bold tracking-tight text-white sm:text-5xl">

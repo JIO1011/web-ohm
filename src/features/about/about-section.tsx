@@ -252,7 +252,7 @@ export default function AboutSection() {
           </ScrollReveal>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             {WHY_US.map(({ Icon, title, body }, idx) => (
-              <ScrollReveal key={idx} delay={idx * 0.07}>
+              <ScrollReveal key={title} delay={idx * 0.07}>
                 <div
                   className="group border-ink-200 bg-ink-50 hover:border-ink-300 h-full rounded-2xl border p-7 transition-all duration-300 hover:shadow-md"
                   style={{ transitionTimingFunction: BEZIER }}

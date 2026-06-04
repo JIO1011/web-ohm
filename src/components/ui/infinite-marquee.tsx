@@ -42,12 +42,15 @@ const marqueeItems = [...technologies, ...technologies, ...technologies, ...tech
 
 export default function InfiniteMarquee() {
   return (
-    <div className="relative z-30 -my-8 w-full overflow-x-clip pb-14 pt-10 sm:-my-10">
+    <div
+      aria-hidden="true"
+      className="relative z-30 -my-8 w-full overflow-x-clip pt-10 pb-14 sm:-my-10"
+    >
       {/* First Ribbon (Dark, straight/slightly tilted) */}
       <div className="relative z-20 mx-auto w-[105vw] -translate-x-[2.5vw] -rotate-1">
-        <div className="relative flex h-20 w-full items-center overflow-hidden bg-ink-900 shadow-xl">
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-ink-900 to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-ink-900 to-transparent" />
+        <div className="bg-ink-900 relative flex h-20 w-full items-center overflow-hidden shadow-xl">
+          <div className="from-ink-900 pointer-events-none absolute top-0 left-0 z-10 h-full w-24 bg-gradient-to-r to-transparent" />
+          <div className="from-ink-900 pointer-events-none absolute top-0 right-0 z-10 h-full w-24 bg-gradient-to-l to-transparent" />
 
           <div className="flex w-max items-center">
             <motion.div
@@ -60,7 +63,7 @@ export default function InfiniteMarquee() {
                 return (
                   <div
                     key={`m1-${idx}`}
-                    className="flex shrink-0 items-center gap-3 whitespace-nowrap text-base font-medium uppercase tracking-widest text-ink-200"
+                    className="text-ink-200 flex shrink-0 items-center gap-3 text-base font-medium tracking-widest whitespace-nowrap uppercase"
                   >
                     <Icon className="h-6 w-6" style={{ color: tech.color }} />
                     <span>{tech.name}</span>
@@ -74,9 +77,9 @@ export default function InfiniteMarquee() {
 
       {/* Second Ribbon (Brand Red, tilted opposite way to create lasso effect) */}
       <div className="absolute inset-0 z-10 mx-auto -mt-2 w-[105vw] -translate-x-[2.5vw] rotate-[2deg]">
-        <div className="relative flex h-20 w-full items-center overflow-hidden bg-brand-500 opacity-95 shadow-lg">
-          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-brand-500 to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-brand-500 to-transparent" />
+        <div className="bg-brand-500 relative flex h-20 w-full items-center overflow-hidden opacity-95 shadow-lg">
+          <div className="from-brand-500 pointer-events-none absolute top-0 left-0 z-10 h-full w-24 bg-gradient-to-r to-transparent" />
+          <div className="from-brand-500 pointer-events-none absolute top-0 right-0 z-10 h-full w-24 bg-gradient-to-l to-transparent" />
 
           <div className="flex w-max items-center">
             <motion.div
@@ -89,7 +92,7 @@ export default function InfiniteMarquee() {
                 return (
                   <div
                     key={`m2-${idx}`}
-                    className="flex shrink-0 items-center gap-3 whitespace-nowrap text-base font-medium uppercase tracking-widest text-white"
+                    className="flex shrink-0 items-center gap-3 text-base font-medium tracking-widest whitespace-nowrap text-white uppercase"
                   >
                     <Icon className="h-6 w-6" style={{ color: tech.color }} />
                     <span>{tech.name}</span>

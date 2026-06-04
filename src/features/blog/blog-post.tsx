@@ -160,9 +160,9 @@ export default function BlogPostView({ post }: { post: BlogPost }) {
         </aside>
 
         <footer className="border-ink-100 flex flex-wrap items-center gap-1.5 border-t pt-6">
-          {post.tags.map((tag, idx) => (
+          {post.tags.map((tag) => (
             <span
-              key={idx}
+              key={tag}
               className="border-ink-200 text-ink-700 rounded-md border bg-white px-2.5 py-1 font-mono text-xs"
             >
               #{tag}

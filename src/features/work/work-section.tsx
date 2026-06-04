@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowRight, Check, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { caseStudies } from "@/data/mock-data";
 import type { CaseStudy } from "@/types";
@@ -218,7 +217,6 @@ function HeroVisual() {
 }
 
 export default function WorkSection() {
-  const router = useRouter();
   const firstCase = caseStudies[0];
   if (!firstCase) throw new Error("caseStudies empty");
 
@@ -265,15 +263,14 @@ export default function WorkSection() {
               mantenimiento biomédico y diseño 3D. Cada uno con su reto, la solución y el resultado.
             </p>
             <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => router.push("/calcular-proyecto")}
+              <Link
+                href="/calcular-proyecto"
                 className="bg-brand-500 shadow-brand-500/30 hover:bg-brand-600 hover:shadow-brand-600/35 inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-medium text-white shadow-lg transition-all duration-200 active:scale-[0.97]"
                 style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
               >
                 Calcular proyecto
                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
-              </button>
+              </Link>
               <Link
                 href="#work-cases"
                 className="border-ink-700 bg-ink-800 text-ink-100 hover:border-ink-600 hover:bg-ink-700 inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-medium transition-colors duration-200"
@@ -364,7 +361,7 @@ export default function WorkSection() {
                 <div className="flex flex-wrap gap-1.5">
                   {activeCase.technologies.map((tech, idx) => (
                     <span
-                      key={idx}
+                      key={`${tech}-${idx}`}
                       className="border-ink-200 text-ink-700 rounded-md border bg-white px-2.5 py-1 font-mono text-xs"
                     >
                       {tech}
@@ -386,9 +383,9 @@ export default function WorkSection() {
                     Resultados
                   </h3>
                   <ul className="space-y-2.5">
-                    {activeCase.results.map((result, idx) => (
+                    {activeCase.results.map((result) => (
                       <li
-                        key={idx}
+                        key={result}
                         className="text-ink-700 flex items-start gap-2.5 text-sm leading-relaxed"
                       >
                         <Check
@@ -402,14 +399,13 @@ export default function WorkSection() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => router.push("/calcular-proyecto")}
+              <Link
+                href="/calcular-proyecto"
                 className="bg-ink-900 text-ink-0 hover:bg-ink-800 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-colors"
               >
                 Cotizar un proyecto similar
                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
-              </button>
+              </Link>
             </aside>
           </article>
         </div>
@@ -463,10 +459,9 @@ export default function WorkSection() {
               <p className="font-display text-ink-800 text-xl leading-relaxed sm:text-2xl">
                 &ldquo;{currentReview.quote}&rdquo;
               </p>
-              <Link
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+              <button
+                type="button"
+                onClick={() => {
                   setSelectedCaseId(currentReview.caseId);
                   document.getElementById("work-cases")?.scrollIntoView({ behavior: "smooth" });
                 }}
@@ -474,7 +469,7 @@ export default function WorkSection() {
               >
                 Ver el caso completo
                 <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -497,15 +492,14 @@ export default function WorkSection() {
                 y un punto de inicio realista. Sin compromiso.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => router.push("/calcular-proyecto")}
+                <Link
+                  href="/calcular-proyecto"
                   className="bg-brand-500 shadow-brand-500/30 hover:bg-brand-600 hover:shadow-brand-600/35 inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-medium text-white shadow-lg transition-all duration-200 active:scale-[0.97]"
                   style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
                 >
                   Agendar diagnóstico
                   <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
-                </button>
+                </Link>
                 <Link
                   href="/servicios"
                   className="border-ink-700 bg-ink-800 text-ink-100 hover:border-ink-600 hover:bg-ink-700 inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 text-sm font-medium transition-colors duration-200"
