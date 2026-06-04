@@ -1,0 +1,67 @@
+{
+  "sessions": [
+    {
+      "code": "2RR6EX",
+      "name": "POA Ingeniería 2026",
+      "createdAt": "2026-06-04T02:56:35.652Z",
+      "needs": [
+        {
+          "id": "n_mpywmhew_wre0bv",
+          "name": "Carlos López",
+          "area": "Sistemas",
+          "category": "software",
+          "description": "Licencias MATLAB para laboratorio de simulación",
+          "justification": "Se necesita para las prácticas de control automático y simulación numérica",
+          "impact": 5,
+          "urgency": 4,
+          "scope": 4,
+          "score": 80,
+          "priority": "critica",
+          "submittedAt": "2026-06-04T02:56:55.208Z"
+        },
+        {
+          "id": "n_mpywnaqi_y85w3g",
+          "name": "Ana Torres",
+          "area": "Electrónica",
+          "category": "equipamiento",
+          "description": "Servidores GPU para deep learning",
+          "justification": "El área de IA necesita poder entrenar modelos localmente",
+          "impact": 4,
+          "urgency": 5,
+          "scope": 3,
+          "score": 60,
+          "priority": "alta",
+          "submittedAt": "2026-06-04T02:57:33.211Z"
+        },
+        {
+          "id": "n_mpywnkn3_gl6ok9",
+          "name": "Pedro Ruiz",
+          "area": "Mecatrónica",
+          "category": "licencias",
+          "description": "Licencias AutoCAD actualizadas",
+          "justification": "Las versiones actuales son de 2020 y no soportan los nuevos formatos",
+          "impact": 4,
+          "urgency": 3,
+          "scope": 4,
+          "score": 48,
+          "priority": "media",
+          "submittedAt": "2026-06-04T02:57:46.047Z"
+        },
+        {
+          "id": "n_mpywnv3s_4vly0s",
+          "name": "María González",
+          "area": "Administrativa",
+          "category": "adecuaciones",
+          "description": "Renovación de cableado red ala norte",
+          "justification": "El cableado actual causa intermitencia en 3 laboratorios",
+          "impact": 3,
+          "urgency": 4,
+          "scope": 5,
+          "score": 60,
+          "priority": "alta",
+          "submittedAt": "2026-06-04T02:57:59.608Z"
+        }
+      ]
+    }
+  ]
+}
