@@ -202,7 +202,7 @@ export default function ResultsDashboard({
   /* ── Loading state ── */
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#f6f7fb]">
+      <div className="flex min-h-[60vh] items-center justify-center bg-transparent">
         <div className="flex items-center gap-3 text-[#64748b]">
           <Loader2 className="h-5 w-5 animate-spin" strokeWidth={2} />
           Cargando resultados…
@@ -213,7 +213,7 @@ export default function ResultsDashboard({
 
   if (!data) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#f6f7fb]">
+      <div className="flex min-h-[60vh] items-center justify-center bg-transparent">
         <p className="text-[#64748b]">No se pudieron cargar los resultados.</p>
       </div>
     );
@@ -222,12 +222,12 @@ export default function ResultsDashboard({
   const stats = data.stats;
 
   return (
-    <div className="bg-[#f6f7fb] pb-28 text-[#0f172a]">
+    <div className="bg-transparent pb-28 text-[#0f172a]">
       {/* Hero */}
       <section className="relative overflow-hidden pt-10 pb-6 sm:pt-14 sm:pb-8">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-28 right-4 h-72 w-72 rounded-full bg-[#2f6bff]/15 blur-[90px]"
+          className="pointer-events-none absolute -top-28 right-4 h-72 w-72 rounded-full bg-[#74c0fc]/20 blur-[90px]"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

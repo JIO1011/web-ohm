@@ -6,9 +6,9 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
-/* The whole /calcular-proyecto subtree renders standalone: no OhmRoyal navbar /
-   footer / advisor, only a minimal floating header (logo + back). */
-const STANDALONE_PREFIXES = ["/calcular-proyecto"] as const;
+/* The /calcular-proyecto and /consensus subtrees render standalone: no OhmRoyal
+   navbar / footer / advisor, only a minimal floating header (logo + back). */
+const STANDALONE_PREFIXES = ["/calcular-proyecto", "/consensus"] as const;
 
 export default function SiteShell({
   navbar,
@@ -25,7 +25,12 @@ export default function SiteShell({
   const isStandalone = STANDALONE_PREFIXES.some((prefix) => pathname?.startsWith(prefix));
 
   if (isStandalone) {
-    const backHref = pathname && pathname !== "/calcular-proyecto" ? "/calcular-proyecto" : "/";
+    // /calcular-proyecto subpages go back to the tools hub; /consensus pages
+    // (often reached via a shared link) and the hub itself go back home.
+    const backHref =
+      pathname && pathname.startsWith("/calcular-proyecto") && pathname !== "/calcular-proyecto"
+        ? "/calcular-proyecto"
+        : "/";
     return (
       <>
         <header className="absolute top-0 left-0 z-30 w-full">

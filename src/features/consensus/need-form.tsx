@@ -259,7 +259,7 @@ export default function NeedForm({
     // Use the server-confirmed priority, not the live slider-derived one.
     const submittedMeta = PRIORITY_META[submittedNeed.priority];
     return (
-      <div className="bg-[#f6f7fb] pb-28 text-[#0f172a]">
+      <div className="bg-transparent pb-28 text-[#0f172a]">
         <section className="relative overflow-hidden pt-10 pb-10 sm:pt-14 sm:pb-12">
           <div
             aria-hidden="true"
@@ -358,7 +358,7 @@ export default function NeedForm({
   /* ── Closed session ── */
   if (sessionStatus === "closed") {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center bg-[#f6f7fb] px-4 text-[#0f172a]">
+      <div className="flex min-h-[70vh] items-center justify-center bg-transparent px-4 text-[#0f172a]">
         <div className="max-w-md rounded-3xl border border-[#e7eaf3] bg-white p-8 text-center shadow-[0_18px_50px_-24px_rgba(15,23,42,0.25)]">
           <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f1f5f9]">
             <ShieldAlert className="h-6 w-6 text-[#64748b]" strokeWidth={2} />
@@ -382,12 +382,12 @@ export default function NeedForm({
 
   /* ── Main form ── */
   return (
-    <div className="bg-[#f6f7fb] pb-28 text-[#0f172a]">
+    <div className="bg-transparent pb-28 text-[#0f172a]">
       {/* Hero */}
       <section className="relative overflow-hidden pt-10 pb-10 sm:pt-14 sm:pb-12">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-28 right-4 h-72 w-72 rounded-full bg-[#2f6bff]/15 blur-[90px]"
+          className="pointer-events-none absolute -top-28 right-4 h-72 w-72 rounded-full bg-[#ffa8d2]/20 blur-[90px]"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-4">

@@ -17,8 +17,8 @@ export default function AuthForm({ mode, next }: { mode: "login" | "signup"; nex
   const isLogin = mode === "login";
 
   return (
-    <div className="min-h-[80vh] bg-[#f6f7fb] text-[#0f172a]">
-      <section className="mx-auto flex max-w-md flex-col px-4 pt-16 pb-28 sm:px-6">
+    <div className="min-h-[80vh] bg-transparent text-[#0f172a]">
+      <section className="mx-auto flex max-w-md flex-col px-4 pb-28 sm:px-6">
         <div className="mb-6 text-center">
           <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf0ff]">
             <BrainCircuit className="h-6 w-6 text-[#2f6bff]" strokeWidth={2} />

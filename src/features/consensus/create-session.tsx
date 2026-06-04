@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, BrainCircuit, Check, Sparkles, Users } from "lucide-react";
+import ConsensusBackdrop from "./consensus-backdrop";
 
 const btnPrimary =
   "inline-flex items-center justify-center gap-2 rounded-2xl bg-[#2f6bff] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#2f6bff]/25 transition-all hover:bg-[#2457e6] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50";
@@ -21,16 +22,17 @@ export default function CreateSession() {
   };
 
   return (
-    <div className="bg-[#f6f7fb] pb-28 text-[#0f172a]">
+    <div className="bg-transparent pb-28 text-[#0f172a]">
+      <ConsensusBackdrop />
       {/* Hero */}
-      <section className="relative overflow-hidden pt-10 pb-10 sm:pt-14 sm:pb-12">
+      <section className="relative overflow-hidden pt-20 pb-10 sm:pt-24 sm:pb-12">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-28 right-4 h-72 w-72 rounded-full bg-[#2f6bff]/15 blur-[90px]"
+          className="pointer-events-none absolute -top-28 right-4 h-72 w-72 rounded-full bg-[#b197fc]/20 blur-[90px]"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-10 right-44 h-56 w-56 rounded-full bg-[#818cf8]/15 blur-[90px]"
+          className="pointer-events-none absolute -top-10 right-44 h-56 w-56 rounded-full bg-[#66d9e8]/20 blur-[90px]"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl space-y-5">
