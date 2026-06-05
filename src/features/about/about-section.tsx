@@ -7,7 +7,6 @@ import {
   Code,
   Eye,
   HeartPulse,
-  Linkedin,
   ShieldCheck,
   Target,
   Users,
@@ -58,67 +57,6 @@ const CERTIFICATIONS: readonly Certification[] = [
   },
 ] as const;
 
-interface TeamMember {
-  id: string;
-  name: string;
-  role: string;
-  focus: string;
-  initials: string;
-  color: string;
-  linkedin?: string;
-}
-
-// Equipo real de OhmRoyal (perfiles del sitio original).
-const TEAM_MEMBERS: readonly TeamMember[] = [
-  {
-    id: "cristopher-collaguazo",
-    name: "Cristopher Collaguazo",
-    role: "CEO · Ingeniero en Mecatrónica",
-    focus:
-      "Automatización, IA aplicada y desarrollo web full-stack. Investigación en biomedicina con IA: histopatología y señales EEG.",
-    initials: "CC",
-    color: "bg-brand-500",
-    linkedin: "https://www.linkedin.com/in/ccollaguazog",
-  },
-  {
-    id: "jorge-inlago",
-    name: "Jorge Inlago",
-    role: "Ciberseguridad · DevSecOps",
-    focus:
-      "M.Sc. en Ciberseguridad e ISO/IEC 27001 (TÜV Rheinland). GRC y AppSec con NIST, OWASP y MITRE ATT&CK. También full-stack.",
-    initials: "JI",
-    color: "bg-ink-700",
-    linkedin: "https://www.linkedin.com/in/jorge-inlago-fonseca-a57006a9/",
-  },
-  {
-    id: "dario-casamin",
-    name: "Darío Casamín",
-    role: "Mantenimiento industrial",
-    focus:
-      "Diagnóstico, reparación y optimización de sistemas electromecánicos. Mantenimiento preventivo, correctivo y predictivo.",
-    initials: "DC",
-    color: "bg-ink-600",
-    linkedin: "https://www.linkedin.com/in/dario-casamin-39a8b0290/",
-  },
-  {
-    id: "edisson-ortiz",
-    name: "Edisson Ortiz",
-    role: "Electrónica biomédica · IoT",
-    focus:
-      "Mantenimiento de equipos médicos e industriales, diseño de circuitos y sistemas embebidos con microcontroladores.",
-    initials: "EO",
-    color: "bg-brand-700",
-  },
-  {
-    id: "jefferson-casa",
-    name: "Jefferson Casa Macao",
-    role: "Automatización industrial",
-    focus:
-      "Mantenimiento eléctrico, control e instrumentación: generadores, compresores, bombas y motores en planta.",
-    initials: "JC",
-    color: "bg-ink-700",
-  },
-] as const;
 
 const WHY_US = [
   {
@@ -289,7 +227,7 @@ export default function AboutSection() {
 
             <div className="lg:col-span-8">
               <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {CERTIFICATIONS.map(({ Icon, credential, issuer, holder, discipline }, idx) => (
+                {CERTIFICATIONS.map(({ Icon, credential, issuer, discipline }, idx) => (
                   <ScrollReveal key={credential} as="li" delay={idx * 0.07}>
                     <div
                       className="group border-ink-200 hover:border-ink-300 flex h-full flex-col gap-4 rounded-2xl border bg-white p-6 transition-all duration-300 hover:shadow-md"
@@ -315,8 +253,6 @@ export default function AboutSection() {
                       </div>
                       <div className="border-ink-100 text-ink-500 mt-auto border-t pt-3 text-sm">
                         <span className="text-ink-700 font-medium">{issuer}</span>
-                        <span className="text-ink-300 mx-1.5">·</span>
-                        <span>{holder}</span>
                       </div>
                     </div>
                   </ScrollReveal>
@@ -327,55 +263,59 @@ export default function AboutSection() {
         </div>
       </section>
 
-      {/* ──────────────────────── TEAM — dark ──────────────────────── */}
-      <section id="about-team" className="bg-ink-900 py-28">
+      {/* ──────────────────────── TEAM / AI — dark ──────────────────────── */}
+      <section id="about-team" className="bg-ink-900 py-28 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <ScrollReveal>
-            <header className="mb-12 max-w-2xl space-y-3">
-              <span className="text-brand-400 block font-mono text-xs font-bold tracking-widest uppercase">
-                Red de especialistas
-              </span>
-              <h2 className="font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                Las personas detrás de cada proyecto.
-              </h2>
-              <p className="text-ink-400 text-base leading-relaxed">
-                Cada especialista fue seleccionado por criterio técnico comprobado en su área. No
-                son perfiles genéricos: son profesionales con trayectoria verificable.
-              </p>
-            </header>
-          </ScrollReveal>
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {TEAM_MEMBERS.map((member, idx) => (
-              <ScrollReveal key={member.id} as="li" delay={idx * 0.06}>
-                <div className="border-ink-700 bg-ink-800 hover:border-ink-600 flex h-full flex-col gap-4 overflow-hidden rounded-2xl border p-6 transition-colors">
-                  <div className="flex items-start justify-between gap-3">
-                    <div
-                      aria-hidden="true"
-                      className={`flex h-14 w-14 items-center justify-center rounded-xl ${member.color} font-display text-xl font-bold text-white shadow-md`}
-                    >
-                      {member.initials}
-                    </div>
-                    {member.linkedin && (
-                      <a
-                        href={member.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`LinkedIn de ${member.name}`}
-                        className="text-ink-500 hover:text-brand-400 transition-colors"
-                      >
-                        <Linkedin className="h-5 w-5" strokeWidth={1.5} />
-                      </a>
-                    )}
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-center lg:gap-12">
+            {/* TEXT COLUMN */}
+            <ScrollReveal className="space-y-8">
+              <header className="space-y-3">
+                <span className="text-brand-400 block font-mono text-xs font-bold tracking-widest uppercase">
+                  Red de especialistas
+                </span>
+                <h2 className="font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                  Las personas detrás de cada proyecto.
+                </h2>
+              </header>
+              
+              <div className="space-y-4 pt-4 border-t border-ink-800">
+                <h3 className="font-display text-2xl font-medium text-white sm:text-3xl leading-snug">
+                  Trabaja con desarrolladores que utilizan inteligencia artificial.
+                </h3>
+                <p className="text-ink-400 text-lg leading-relaxed">
+                  Todos los desarrolladores con los que trabajamos utilizan herramientas de codificación de IA modernas para realizar entregas más rápido que nunca, a la vez que producen un código más limpio y consistente.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            {/* ICONS GRID COLUMN */}
+            <ScrollReveal delay={0.1} className="mx-auto w-full max-w-lg lg:max-w-none relative">
+              {/* Subtle background glow */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-brand-500/20 blur-[100px] rounded-full pointer-events-none" />
+              
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 relative z-10">
+                {[
+                  { name: "Claude", src: "https://cdn.simpleicons.org/anthropic" },
+                  { name: "GitHub", src: "https://cdn.simpleicons.org/github/111827" },
+                  { name: "Codex (OpenAI)", src: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
+                  { name: "Cursor", src: "https://cdn.simpleicons.org/cursor/111827" },
+                  { name: "Gemini", src: "https://cdn.simpleicons.org/googlegemini" },
+                  { name: "Copilot", src: "https://cdn.simpleicons.org/githubcopilot/111827" },
+                  { name: "Ollama", src: "https://cdn.simpleicons.org/ollama/111827" },
+                  { name: "Windsurf", src: "https://cdn.simpleicons.org/windsurf/111827" },
+                  { name: "Supabase", src: "https://cdn.simpleicons.org/supabase" },
+                ].map(({ name, src }, i) => (
+                  <div 
+                    key={i} 
+                    className="flex aspect-square items-center justify-center rounded-2xl sm:rounded-[2rem] bg-white shadow-2xl shadow-black/40 hover:scale-105 transition-transform duration-300"
+                    title={name}
+                  >
+                    <img src={src} alt={name} className="h-8 w-8 sm:h-12 sm:w-12 object-contain" />
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="text-base font-semibold text-white">{member.name}</h3>
-                    <p className="text-brand-400 text-sm">{member.role}</p>
-                  </div>
-                  <p className="text-ink-400 text-sm leading-relaxed">{member.focus}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </ul>
+                ))}
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
