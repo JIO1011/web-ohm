@@ -3,7 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Check, Sparkles, Users } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  BrainCircuit,
+  Check,
+  Loader2,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import ConsensusBackdrop from "./consensus-backdrop";
 
 const btnPrimary =
@@ -14,10 +22,25 @@ const inputBase =
 export default function CreateSession() {
   const router = useRouter();
   const [joinCode, setJoinCode] = useState("");
+  const [joinError, setJoinError] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
 
-  const handleJoin = () => {
+  const handleJoin = async () => {
     const code = joinCode.trim().toUpperCase();
     if (code.length < 4) return;
+    setJoinError("");
+    setIsJoining(true);
+    try {
+      const res = await fetch(`/api/consensus/${code}/needs`);
+      if (res.status === 404) {
+        setJoinError("Código no encontrado. Verifica con tu facilitador e intenta de nuevo.");
+        return;
+      }
+    } catch {
+      // network error — let the server page handle it
+    } finally {
+      setIsJoining(false);
+    }
     router.push(`/consensus/${code}`);
   };
 
@@ -123,12 +146,25 @@ export default function CreateSession() {
               <button
                 type="button"
                 onClick={handleJoin}
-                disabled={joinCode.trim().length < 4}
+                disabled={joinCode.trim().length < 4 || isJoining}
                 className={`w-full ${btnPrimary} bg-[#7c3aed] shadow-[#7c3aed]/25 hover:bg-[#6d28d9]`}
               >
-                Unirme
-                <ArrowRight className="h-4 w-4" strokeWidth={2} />
+                {isJoining ? (
+                  <Loader2 className="h-4 w-4 animate-spin" strokeWidth={2} />
+                ) : (
+                  <>
+                    Unirme
+                    <ArrowRight className="h-4 w-4" strokeWidth={2} />
+                  </>
+                )}
               </button>
+
+              {joinError && (
+                <div className="flex items-start gap-2 rounded-2xl bg-red-50 px-3 py-2.5">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" strokeWidth={2} />
+                  <p className="text-xs font-medium text-red-700">{joinError}</p>
+                </div>
+              )}
             </div>
 
             <div className="mt-5 space-y-2 border-t border-[#eef1f7] pt-4">

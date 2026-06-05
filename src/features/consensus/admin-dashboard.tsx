@@ -6,18 +6,30 @@ import Link from "next/link";
 import {
   ArrowRight,
   BrainCircuit,
+  CalendarClock,
   Check,
+  ChevronDown,
   ClipboardCopy,
+  ExternalLink,
   Loader2,
   Lock,
   LockOpen,
   LogOut,
   Plus,
+  QrCode,
+  Settings2,
   Trash2,
   Users,
+  X,
 } from "lucide-react";
 import type { SessionSummary } from "./types";
-import { createSessionAction, setSessionStatusAction, deleteSessionAction } from "./actions";
+import {
+  createSessionAction,
+  setSessionStatusAction,
+  setScheduleAction,
+  deleteSessionAction,
+  updateCategoriesAction,
+} from "./actions";
 import { signOutAction } from "./auth-actions";
 
 const btnPrimary =
@@ -183,91 +195,139 @@ export default function AdminDashboard({
               return (
                 <div
                   key={s.code}
-                  className="rounded-3xl border border-[#e7eaf3] bg-white p-5 shadow-sm sm:p-6"
+                  className="overflow-hidden rounded-3xl border border-[#e7eaf3] bg-white shadow-sm"
                 >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h2 className="font-outfit truncate text-lg font-bold text-[#0f172a]">
-                          {s.name}
-                        </h2>
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            isOpen ? "bg-[#dcfce7] text-[#15803d]" : "bg-[#f1f5f9] text-[#64748b]"
-                          }`}
-                        >
-                          {isOpen ? "Abierta" : "Cerrada"}
-                        </span>
+                  {/* ── Code hero banner ── */}
+                  {isOpen && (
+                    <div className="flex flex-col items-center gap-4 border-b border-[#eef1f7] bg-[#f8faff] px-6 py-5 sm:flex-row sm:justify-between">
+                      <div className="text-center sm:text-left">
+                        <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#64748b] sm:justify-start">
+                          <QrCode className="h-3.5 w-3.5" strokeWidth={2} />
+                          Comparte este código con tu equipo
+                        </p>
+                        <p className="font-outfit mt-1 text-4xl font-extrabold tracking-[0.25em] text-[#2f6bff] sm:text-5xl">
+                          {s.code}
+                        </p>
                       </div>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#94a3b8]">
-                        <span className="font-mono tracking-[0.15em] text-[#2f6bff]">{s.code}</span>
-                        <span className="inline-flex items-center gap-1">
-                          <Users className="h-3 w-3" strokeWidth={2} />
-                          {s.needCount} {s.needCount === 1 ? "necesidad" : "necesidades"}
-                        </span>
-                        <span>{new Date(s.createdAt).toLocaleDateString("es-ES")}</span>
+                      <div className="flex flex-wrap justify-center gap-2 sm:justify-end">
+                        <button
+                          type="button"
+                          onClick={() => copy(participantUrl, `p-${s.code}`)}
+                          className={`${btnPrimary} text-sm`}
+                        >
+                          {copied === `p-${s.code}` ? (
+                            <Check className="h-4 w-4" strokeWidth={2.5} />
+                          ) : (
+                            <ClipboardCopy className="h-4 w-4" strokeWidth={2} />
+                          )}
+                          {copied === `p-${s.code}` ? "¡Copiado!" : "Copiar enlace"}
+                        </button>
+                        <Link
+                          href={participantUrl}
+                          target="_blank"
+                          className={`${btnGhost} text-sm`}
+                        >
+                          <ExternalLink className="h-4 w-4" strokeWidth={2} />
+                          Abrir
+                        </Link>
                       </div>
                     </div>
+                  )}
 
-                    <Link
-                      href={`/consensus/${s.code}/resultados`}
-                      className={`${btnPrimary} shrink-0`}
-                    >
-                      Ver resultados
-                      <ArrowRight className="h-4 w-4" strokeWidth={2} />
-                    </Link>
-                  </div>
+                  {/* ── Session info + actions ── */}
+                  <div className="p-5 sm:p-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h2 className="font-outfit truncate text-lg font-bold text-[#0f172a]">
+                            {s.name}
+                          </h2>
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                              isOpen ? "bg-[#dcfce7] text-[#15803d]" : "bg-[#f1f5f9] text-[#64748b]"
+                            }`}
+                          >
+                            {isOpen ? "Abierta" : "Cerrada"}
+                          </span>
+                          {!isOpen && (
+                            <span className="font-mono text-xs tracking-[0.15em] text-[#94a3b8]">
+                              {s.code}
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#94a3b8]">
+                          <span className="inline-flex items-center gap-1">
+                            <Users className="h-3 w-3" strokeWidth={2} />
+                            {s.needCount} {s.needCount === 1 ? "necesidad" : "necesidades"}
+                          </span>
+                          <span>{new Date(s.createdAt).toLocaleDateString("es-ES")}</span>
+                        </div>
+                      </div>
 
-                  {/* Actions */}
-                  <div className="mt-4 flex flex-wrap gap-2 border-t border-[#eef1f7] pt-4">
-                    <button
-                      type="button"
-                      onClick={() => copy(participantUrl, `p-${s.code}`)}
-                      className={`${btnGhost} text-xs`}
-                    >
-                      {copied === `p-${s.code}` ? (
-                        <Check className="h-3.5 w-3.5 text-[#15803d]" strokeWidth={2.5} />
-                      ) : (
-                        <ClipboardCopy className="h-3.5 w-3.5" strokeWidth={2} />
-                      )}
-                      Enlace participantes
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => copy(resultsUrl, `r-${s.code}`)}
-                      className={`${btnGhost} text-xs`}
-                    >
-                      {copied === `r-${s.code}` ? (
-                        <Check className="h-3.5 w-3.5 text-[#15803d]" strokeWidth={2.5} />
-                      ) : (
-                        <ClipboardCopy className="h-3.5 w-3.5" strokeWidth={2} />
-                      )}
-                      Enlace resultados
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleStatus(s.code, s.status)}
-                      disabled={busy}
-                      className={`${btnGhost} text-xs`}
-                    >
-                      {busy ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2} />
-                      ) : isOpen ? (
-                        <Lock className="h-3.5 w-3.5" strokeWidth={2} />
-                      ) : (
-                        <LockOpen className="h-3.5 w-3.5" strokeWidth={2} />
-                      )}
-                      {isOpen ? "Cerrar" : "Reabrir"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => remove(s.code)}
-                      disabled={busy}
-                      className={`${btnGhost} text-xs text-[#dc2626] hover:bg-red-50`}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" strokeWidth={2} />
-                      Eliminar
-                    </button>
+                      <Link
+                        href={`/consensus/${s.code}/resultados`}
+                        className={`${btnGhost} shrink-0`}
+                      >
+                        Ver resultados
+                        <ArrowRight className="h-4 w-4" strokeWidth={2} />
+                      </Link>
+                    </div>
+
+                    {/* Secondary actions */}
+                    <div className="mt-4 flex flex-wrap gap-2 border-t border-[#eef1f7] pt-4">
+                      <button
+                        type="button"
+                        onClick={() => copy(resultsUrl, `r-${s.code}`)}
+                        className={`${btnGhost} text-xs`}
+                      >
+                        {copied === `r-${s.code}` ? (
+                          <Check className="h-3.5 w-3.5 text-[#15803d]" strokeWidth={2.5} />
+                        ) : (
+                          <ClipboardCopy className="h-3.5 w-3.5" strokeWidth={2} />
+                        )}
+                        Copiar enlace resultados
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleStatus(s.code, s.status)}
+                        disabled={busy}
+                        className={`${btnGhost} text-xs`}
+                      >
+                        {busy ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2} />
+                        ) : isOpen ? (
+                          <Lock className="h-3.5 w-3.5" strokeWidth={2} />
+                        ) : (
+                          <LockOpen className="h-3.5 w-3.5" strokeWidth={2} />
+                        )}
+                        {isOpen ? "Cerrar sesión" : "Reabrir sesión"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => remove(s.code)}
+                        disabled={busy}
+                        className={`${btnGhost} text-xs text-[#dc2626] hover:bg-red-50`}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" strokeWidth={2} />
+                        Eliminar
+                      </button>
+                    </div>
+
+                    {/* Auto-close schedule */}
+                    <ScheduleEditor
+                      code={s.code}
+                      initialClosesAt={s.closesAt}
+                      inputBase={inputBase}
+                      btnGhost={btnGhost}
+                    />
+
+                    {/* Category editor */}
+                    <CategoryEditor
+                      code={s.code}
+                      initialCategories={s.categories}
+                      inputBase={inputBase}
+                      btnGhost={btnGhost}
+                    />
                   </div>
                 </div>
               );
@@ -275,6 +335,272 @@ export default function AdminDashboard({
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+/* ── Auto-close schedule editor ── */
+function toLocalInput(iso: string): string {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function ScheduleEditor({
+  code,
+  initialClosesAt,
+  inputBase: ib,
+  btnGhost: bg,
+}: {
+  code: string;
+  initialClosesAt: string | null;
+  inputBase: string;
+  btnGhost: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(initialClosesAt ? toLocalInput(initialClosesAt) : "");
+  const [closesAt, setClosesAt] = useState<string | null>(initialClosesAt);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const save = async (clear: boolean) => {
+    setSaving(true);
+    setError("");
+    // Convert the local datetime to an unambiguous ISO string on the client,
+    // where the user's timezone is correct (the server tz may differ).
+    let iso: string | null = null;
+    if (!clear) {
+      if (!value) {
+        setError("Elige una fecha y hora.");
+        setSaving(false);
+        return;
+      }
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) {
+        setError("Fecha inválida.");
+        setSaving(false);
+        return;
+      }
+      iso = d.toISOString();
+    }
+    const res = await setScheduleAction(code, iso);
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
+    setClosesAt(iso);
+    if (clear) setValue("");
+  };
+
+  return (
+    <div className="mt-3 border-t border-[#eef1f7] pt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between text-xs font-semibold text-[#64748b] hover:text-[#334155]"
+      >
+        <span className="flex items-center gap-1.5">
+          <CalendarClock className="h-3.5 w-3.5" strokeWidth={2} />
+          Cierre automático
+          {closesAt ? (
+            <span className="font-normal text-[#2f6bff]">
+              ·{" "}
+              {new Date(closesAt).toLocaleString("es-ES", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </span>
+          ) : (
+            <span className="font-normal text-[#94a3b8]">· sin programar</span>
+          )}
+        </span>
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+          strokeWidth={2}
+        />
+      </button>
+
+      {open && (
+        <div className="mt-3 space-y-2">
+          <div className="flex flex-wrap gap-2">
+            <input
+              type="datetime-local"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              className={`${ib} max-w-[16rem] py-1.5 text-xs`}
+            />
+            <button
+              type="button"
+              onClick={() => save(false)}
+              disabled={saving}
+              className={`${bg} text-xs`}
+            >
+              {saving ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2} />
+              ) : (
+                <Check className="h-3.5 w-3.5" strokeWidth={2} />
+              )}
+              Programar
+            </button>
+            {closesAt && (
+              <button
+                type="button"
+                onClick={() => save(true)}
+                disabled={saving}
+                className={`${bg} text-xs text-[#dc2626] hover:bg-red-50`}
+              >
+                <X className="h-3.5 w-3.5" strokeWidth={2} />
+                Quitar
+              </button>
+            )}
+          </div>
+          <p className="text-[11px] text-[#94a3b8]">
+            Al llegar la fecha, la sesión deja de aceptar necesidades automáticamente.
+          </p>
+          {error && <p className="text-xs font-medium text-red-600">{error}</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Inline category editor — one per session card ── */
+function CategoryEditor({
+  code,
+  initialCategories,
+  inputBase: ib,
+  btnGhost: bg,
+}: {
+  code: string;
+  initialCategories: string[];
+  inputBase: string;
+  btnGhost: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [cats, setCats] = useState<string[]>(initialCategories);
+  const [newCat, setNewCat] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [catError, setCatError] = useState("");
+  const saveTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(
+    () => () => {
+      if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    },
+    []
+  );
+
+  const addCat = () => {
+    const trimmed = newCat.trim().toLowerCase();
+    if (!trimmed) return;
+    if (cats.includes(trimmed)) {
+      setCatError("Ya existe esa categoría.");
+      return;
+    }
+    if (cats.length >= 20) {
+      setCatError("Máximo 20 categorías.");
+      return;
+    }
+    setCatError("");
+    setCats((prev) => [...prev, trimmed]);
+    setNewCat("");
+  };
+
+  const removeCat = (cat: string) => {
+    if (cats.length <= 1) {
+      setCatError("Debe quedar al menos una categoría.");
+      return;
+    }
+    setCatError("");
+    setCats((prev) => prev.filter((c) => c !== cat));
+  };
+
+  const save = async () => {
+    setSaving(true);
+    setCatError("");
+    const res = await updateCategoriesAction(code, cats);
+    setSaving(false);
+    if (!res.ok) {
+      setCatError(res.error);
+      return;
+    }
+    setSaved(true);
+    if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    saveTimeout.current = setTimeout(() => setSaved(false), 2000);
+  };
+
+  return (
+    <div className="mt-3 border-t border-[#eef1f7] pt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between text-xs font-semibold text-[#64748b] hover:text-[#334155]"
+      >
+        <span className="flex items-center gap-1.5">
+          <Settings2 className="h-3.5 w-3.5" strokeWidth={2} />
+          Categorías del formulario ({cats.length})
+        </span>
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+          strokeWidth={2}
+        />
+      </button>
+
+      {open && (
+        <div className="mt-3 space-y-3">
+          {/* Current categories */}
+          <div className="flex flex-wrap gap-1.5">
+            {cats.map((cat) => (
+              <span
+                key={cat}
+                className="inline-flex items-center gap-1 rounded-full bg-[#f1f5f9] px-2.5 py-1 text-xs font-medium text-[#334155] capitalize"
+              >
+                {cat}
+                <button
+                  type="button"
+                  onClick={() => removeCat(cat)}
+                  className="text-[#94a3b8] hover:text-[#dc2626]"
+                  aria-label={`Eliminar ${cat}`}
+                >
+                  <X className="h-3 w-3" strokeWidth={2.5} />
+                </button>
+              </span>
+            ))}
+          </div>
+
+          {/* Add new */}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Nueva categoría…"
+              value={newCat}
+              onChange={(e) => setNewCat(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addCat()}
+              className={`${ib} py-1.5 text-xs`}
+              maxLength={40}
+            />
+            <button type="button" onClick={addCat} className={`${bg} shrink-0 py-1.5 text-xs`}>
+              <Plus className="h-3 w-3" strokeWidth={2.5} />
+              Añadir
+            </button>
+          </div>
+
+          {catError && <p className="text-xs font-medium text-red-600">{catError}</p>}
+
+          <button type="button" onClick={save} disabled={saving} className={`${bg} text-xs`}>
+            {saving ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2} />
+            ) : saved ? (
+              <Check className="h-3.5 w-3.5 text-[#15803d]" strokeWidth={2.5} />
+            ) : (
+              <Check className="h-3.5 w-3.5" strokeWidth={2} />
+            )}
+            {saved ? "¡Guardado!" : "Guardar categorías"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

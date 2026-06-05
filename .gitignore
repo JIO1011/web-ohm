@@ -14,3 +14,4 @@ data/leads.json
 data/consensus.json
 __pycache__/
 *.pyc
+.claude/

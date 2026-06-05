@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSession } from "@/lib/consensus-repo";
+import { getSession, getSessionOwnerId } from "@/lib/consensus-repo";
+import { createClient } from "@/lib/supabase/server";
 import { computeStats, sortByScore } from "@/features/consensus/scoring";
 import type { DashboardResponse } from "@/features/consensus/types";
 import ResultsDashboard from "@/features/consensus/results-dashboard";
@@ -38,17 +39,35 @@ export default async function ConsensusResultsPage({ params }: Props) {
       code: session.code,
       name: session.name,
       status: session.status,
+      categories: session.categories,
+      groups: session.groups,
+      closesAt: session.closesAt,
       createdAt: session.createdAt,
     },
     needs: sortedNeeds,
     stats,
+    votes: session.votes,
   };
+
+  // The facilitator who owns the session sees the grouping (consolidation) controls.
+  let isOwner = false;
+  const supabase = await createClient();
+  if (supabase) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const ownerId = await getSessionOwnerId(session.code);
+      isOwner = ownerId === user.id;
+    }
+  }
 
   return (
     <ResultsDashboard
       sessionCode={session.code}
       sessionName={session.name}
       initialData={initialData}
+      isOwner={isOwner}
     />
   );
 }

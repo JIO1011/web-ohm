@@ -7,42 +7,24 @@ import {
   BarChart3,
   Check,
   CheckCircle2,
-  Cog,
-  FileText,
-  Laptop,
   Loader2,
-  Package,
   Plus,
   ShieldAlert,
-  Tag,
 } from "lucide-react";
 import type { Category, Need, SessionStatus } from "./types";
-import { CATEGORIES, CATEGORY_LABELS, PRIORITY_META } from "./types";
+import { DEFAULT_CATEGORIES, PRIORITY_META } from "./types";
 import { calculateScore, getPriority } from "./scoring";
 
 /** Remembers the participant's name/area across needs and sessions. */
 const IDENTITY_KEY = "consensus:identity";
 
-/* ── Styles (consistent with presupuestador + create-session) ── */
+/* ── Styles (consistent with presupuestador + admin-dashboard) ── */
 const btnPrimary =
   "inline-flex items-center justify-center gap-2 rounded-2xl bg-[#2f6bff] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#2f6bff]/25 transition-all hover:bg-[#2457e6] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed";
 const btnGhost =
   "inline-flex items-center justify-center gap-2 rounded-2xl border border-[#e7eaf3] bg-white px-5 py-2.5 text-sm font-semibold text-[#334155] transition-colors hover:bg-[#f6f8fd] active:scale-[0.98]";
 const inputBase =
   "w-full rounded-2xl border border-[#e7eaf3] bg-white px-4 py-3 text-sm text-[#0f172a] transition-colors placeholder:text-[#94a3b8] focus:border-[#2f6bff] focus:ring-2 focus:ring-[#2f6bff]/20 focus:outline-none";
-const optBase =
-  "rounded-2xl border text-left transition-all duration-200 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2f6bff]/40 cursor-pointer";
-const optIdle =
-  "border-[#e7eaf3] bg-white text-[#0f172a] hover:border-[#2f6bff]/45 hover:bg-[#f6f8fd]";
-
-/* Category icons */
-const CATEGORY_ICONS: Record<Category, typeof Laptop> = {
-  software: Laptop,
-  licencias: Tag,
-  equipamiento: Package,
-  adecuaciones: Cog,
-  otro: FileText,
-};
 
 /* Slider labels */
 const SLIDER_LABELS: Record<number, string> = {
@@ -122,17 +104,21 @@ export default function NeedForm({
   sessionCode,
   sessionName,
   sessionStatus,
+  categories,
 }: {
   sessionCode: string;
   sessionName: string;
   sessionStatus: SessionStatus;
+  categories: string[];
 }) {
   const router = useRouter();
 
   /* Form state */
   const [name, setName] = useState("");
   const [area, setArea] = useState("");
-  const [category, setCategory] = useState<Category>("software");
+  const [category, setCategory] = useState<Category>(
+    () => categories[0] ?? DEFAULT_CATEGORIES[0] ?? "software"
+  );
   const [description, setDescription] = useState("");
   const [justification, setJustification] = useState("");
   const [impact, setImpact] = useState(3);
@@ -405,223 +391,232 @@ export default function NeedForm({
         </div>
       </section>
 
-      {/* Form */}
-      <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      {/* Form — wider container on desktop for 2-col layout */}
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-[#e7eaf3] bg-white p-6 shadow-[0_18px_50px_-24px_rgba(15,23,42,0.25)] sm:p-8">
-          <div className="space-y-8">
-            {/* Honeypot — hidden from humans, ignored by screen readers. */}
-            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-              <label htmlFor="hp-field">No llenar</label>
-              <input
-                id="hp-field"
-                type="text"
-                tabIndex={-1}
-                autoComplete="off"
-                value={hpField}
-                onChange={(e) => setHpField(e.target.value)}
-              />
-            </div>
+          {/* Honeypot — hidden from humans, ignored by screen readers. */}
+          <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+            <label htmlFor="hp-field">No llenar</label>
+            <input
+              id="hp-field"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={hpField}
+              onChange={(e) => setHpField(e.target.value)}
+            />
+          </div>
 
-            {/* ── Section 1: Info básica ── */}
-            <div className="space-y-4">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-[#0f172a]">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#eaf0ff] text-[11px] font-bold text-[#2f6bff]">
-                  1
-                </span>
-                Información básica
-              </h3>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label htmlFor="need-name" className="block text-sm font-semibold text-[#334155]">
-                    Nombre <span className="text-[#ff7a59]">*</span>
-                  </label>
-                  <input
-                    id="need-name"
-                    type="text"
-                    placeholder="Tu nombre"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className={inputBase}
-                    maxLength={120}
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label htmlFor="need-area" className="block text-sm font-semibold text-[#334155]">
-                    Área / Departamento <span className="text-[#ff7a59]">*</span>
-                  </label>
-                  <input
-                    id="need-area"
-                    type="text"
-                    placeholder="Ej: Ingeniería, Sistemas"
-                    value={area}
-                    onChange={(e) => setArea(e.target.value)}
-                    className={inputBase}
-                    maxLength={120}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* ── Section 2: Necesidad ── */}
-            <div className="space-y-4">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-[#0f172a]">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#fff1ec] text-[11px] font-bold text-[#ff7a59]">
-                  2
-                </span>
-                Necesidad
-              </h3>
-
-              {/* Category selector */}
-              <div className="space-y-1.5">
-                <span className="block text-sm font-semibold text-[#334155]">Categoría</span>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-                  {CATEGORIES.map((cat) => {
-                    const Icon = CATEGORY_ICONS[cat];
-                    const isActive = category === cat;
-                    return (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() => setCategory(cat)}
-                        aria-pressed={isActive}
-                        className={`flex flex-col items-center gap-1.5 px-3 py-3 text-center ${optBase} ${
-                          isActive
-                            ? "border-[#2f6bff] bg-[#eaf0ff] ring-2 ring-[#2f6bff]/30"
-                            : optIdle
-                        }`}
-                      >
-                        <Icon
-                          className={`h-5 w-5 ${isActive ? "text-[#2f6bff]" : "text-[#94a3b8]"}`}
-                          strokeWidth={1.75}
-                        />
-                        <span className="text-xs font-semibold">{CATEGORY_LABELS[cat]}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="need-description"
-                  className="block text-sm font-semibold text-[#334155]"
-                >
-                  Descripción <span className="text-[#ff7a59]">*</span>
-                </label>
-                <textarea
-                  id="need-description"
-                  placeholder="¿Qué se necesita? Incluye nombre y versión si aplica."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className={`${inputBase} min-h-[80px] resize-y`}
-                  maxLength={500}
-                  rows={3}
-                />
-                <p className="text-right text-[10px] text-[#c4cad8]">{description.length}/500</p>
-              </div>
-
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="need-justification"
-                  className="block text-sm font-semibold text-[#334155]"
-                >
-                  Justificación <span className="font-normal text-[#94a3b8]">(opcional)</span>
-                </label>
-                <textarea
-                  id="need-justification"
-                  placeholder="¿Para qué se usará? ¿Qué problema resuelve?"
-                  value={justification}
-                  onChange={(e) => setJustification(e.target.value)}
-                  className={`${inputBase} min-h-[80px] resize-y`}
-                  maxLength={500}
-                  rows={3}
-                />
-                <p className="text-right text-[10px] text-[#c4cad8]">{justification.length}/500</p>
-              </div>
-            </div>
-
-            {/* ── Section 3: Priorización ── */}
-            <div className="space-y-5">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-[#0f172a]">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#eaf0ff] text-[11px] font-bold text-[#2f6bff]">
-                  3
-                </span>
-                Priorización
-              </h3>
-
-              <SliderField
-                label="Impacto"
-                value={impact}
-                onChange={setImpact}
-                description="¿Qué tan relevante es para el trabajo del área?"
-                accentColor="#2f6bff"
-              />
-              <SliderField
-                label="Urgencia"
-                value={urgency}
-                onChange={setUrgency}
-                description="¿Cuándo se necesita?"
-                accentColor="#ff7a59"
-              />
-              <SliderField
-                label="Alcance"
-                value={scope}
-                onChange={setScope}
-                description="¿A cuántas personas beneficia?"
-                accentColor="#7c3aed"
-              />
-
-              {/* Live score preview */}
-              <div className="flex items-center justify-between rounded-2xl border border-[#e7eaf3] bg-[#f6f8fd] px-5 py-4">
-                <div className="flex items-center gap-3">
-                  <BarChart3 className="h-5 w-5 text-[#2f6bff]" strokeWidth={2} />
-                  <div>
-                    <p className="text-xs font-semibold text-[#94a3b8]">Puntaje calculado</p>
-                    <p className="font-outfit text-2xl font-extrabold text-[#0f172a]">
-                      {score}
-                      <span className="ml-1 text-sm font-medium text-[#94a3b8]">/ 125</span>
-                    </p>
+          {/* 2-col on md+: left = info + necesidad, right = priorización sticky */}
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10">
+            {/* ── LEFT COLUMN ── */}
+            <div className="space-y-8">
+              {/* Section 1: Info básica */}
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-[#0f172a]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#eaf0ff] text-[11px] font-bold text-[#2f6bff]">
+                    1
+                  </span>
+                  Información básica
+                </h3>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-1">
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="need-name"
+                      className="block text-sm font-semibold text-[#334155]"
+                    >
+                      Nombre <span className="text-[#ff7a59]">*</span>
+                    </label>
+                    <input
+                      id="need-name"
+                      type="text"
+                      placeholder="Tu nombre"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className={inputBase}
+                      maxLength={120}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="need-area"
+                      className="block text-sm font-semibold text-[#334155]"
+                    >
+                      Área / Departamento <span className="text-[#ff7a59]">*</span>
+                    </label>
+                    <input
+                      id="need-area"
+                      type="text"
+                      placeholder="Ej: Ingeniería, Sistemas"
+                      value={area}
+                      onChange={(e) => setArea(e.target.value)}
+                      className={inputBase}
+                      maxLength={120}
+                    />
                   </div>
                 </div>
-                <span
-                  className={`rounded-full border px-3 py-1 text-xs font-bold ${priorityMeta.bg} ${priorityMeta.text} ${priorityMeta.border}`}
-                >
-                  {priorityMeta.emoji} {priorityMeta.label}
-                </span>
+              </div>
+
+              {/* Section 2: Necesidad */}
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-[#0f172a]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#fff1ec] text-[11px] font-bold text-[#ff7a59]">
+                    2
+                  </span>
+                  Necesidad
+                </h3>
+
+                {/* Category selector — dynamic text pills */}
+                <div className="space-y-1.5">
+                  <span className="block text-sm font-semibold text-[#334155]">Categoría</span>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.map((cat) => {
+                      const isActive = category === cat;
+                      return (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => setCategory(cat)}
+                          aria-pressed={isActive}
+                          className={`rounded-full border px-4 py-1.5 text-xs font-semibold capitalize transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2f6bff]/40 ${
+                            isActive
+                              ? "border-[#2f6bff] bg-[#eaf0ff] text-[#2f6bff] ring-2 ring-[#2f6bff]/20"
+                              : "border-[#e7eaf3] bg-white text-[#334155] hover:border-[#2f6bff]/40 hover:bg-[#f6f8fd]"
+                          }`}
+                        >
+                          {cat}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="need-description"
+                    className="block text-sm font-semibold text-[#334155]"
+                  >
+                    Descripción <span className="text-[#ff7a59]">*</span>
+                  </label>
+                  <textarea
+                    id="need-description"
+                    placeholder="¿Qué se necesita? Incluye nombre y versión si aplica."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className={`${inputBase} min-h-[80px] resize-y`}
+                    maxLength={500}
+                    rows={3}
+                  />
+                  <p className="text-right text-[10px] text-[#c4cad8]">{description.length}/500</p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="need-justification"
+                    className="block text-sm font-semibold text-[#334155]"
+                  >
+                    Justificación <span className="font-normal text-[#94a3b8]">(opcional)</span>
+                  </label>
+                  <textarea
+                    id="need-justification"
+                    placeholder="¿Para qué se usará? ¿Qué problema resuelve?"
+                    value={justification}
+                    onChange={(e) => setJustification(e.target.value)}
+                    className={`${inputBase} min-h-[80px] resize-y`}
+                    maxLength={500}
+                    rows={3}
+                  />
+                  <p className="text-right text-[10px] text-[#c4cad8]">
+                    {justification.length}/500
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Error */}
-            {error && (
-              <p className="rounded-xl bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
-                {error}
-              </p>
-            )}
+            {/* ── RIGHT COLUMN: Priorización (sticky on desktop) ── */}
+            <div className="md:sticky md:top-24 md:self-start">
+              <div className="space-y-5 rounded-2xl border border-[#e7eaf3] bg-[#f8faff] p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-[#0f172a]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#eaf0ff] text-[11px] font-bold text-[#2f6bff]">
+                    3
+                  </span>
+                  Priorización
+                </h3>
 
-            {/* Submit */}
-            <div className="flex items-center justify-between border-t border-[#eef1f7] pt-6">
-              <p className="flex items-center gap-1.5 text-xs text-[#94a3b8]">
-                <Check className="h-3 w-3 text-[#22c197]" strokeWidth={3} />
-                Puedes enviar más de una necesidad
-              </p>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isLoading || !canSubmit}
-                className={btnPrimary}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" strokeWidth={2} />
-                    Enviando…
-                  </>
-                ) : (
-                  <>
-                    Enviar necesidad
-                    <ArrowRight className="h-4 w-4" strokeWidth={2} />
-                  </>
+                <SliderField
+                  label="Impacto"
+                  value={impact}
+                  onChange={setImpact}
+                  description="¿Qué tan relevante es para el trabajo del área?"
+                  accentColor="#2f6bff"
+                />
+                <SliderField
+                  label="Urgencia"
+                  value={urgency}
+                  onChange={setUrgency}
+                  description="¿Cuándo se necesita?"
+                  accentColor="#ff7a59"
+                />
+                <SliderField
+                  label="Alcance"
+                  value={scope}
+                  onChange={setScope}
+                  description="¿A cuántas personas beneficia?"
+                  accentColor="#7c3aed"
+                />
+
+                {/* Live score */}
+                <div className="flex items-center justify-between rounded-2xl border border-[#e7eaf3] bg-white px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <BarChart3 className="h-5 w-5 text-[#2f6bff]" strokeWidth={2} />
+                    <div>
+                      <p className="text-[10px] font-semibold text-[#94a3b8]">Puntaje</p>
+                      <p className="font-outfit text-2xl font-extrabold text-[#0f172a]">
+                        {score}
+                        <span className="ml-1 text-sm font-medium text-[#94a3b8]">/ 125</span>
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    className={`rounded-full border px-3 py-1 text-xs font-bold ${priorityMeta.bg} ${priorityMeta.text} ${priorityMeta.border}`}
+                  >
+                    {priorityMeta.emoji} {priorityMeta.label}
+                  </span>
+                </div>
+
+                {/* Error */}
+                {error && (
+                  <p className="rounded-xl bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
+                    {error}
+                  </p>
                 )}
-              </button>
+
+                {/* Submit */}
+                <div className="space-y-3 border-t border-[#eef1f7] pt-4">
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={isLoading || !canSubmit}
+                    className={`w-full ${btnPrimary}`}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" strokeWidth={2} />
+                        Enviando…
+                      </>
+                    ) : (
+                      <>
+                        Enviar necesidad
+                        <ArrowRight className="h-4 w-4" strokeWidth={2} />
+                      </>
+                    )}
+                  </button>
+                  <p className="flex items-center justify-center gap-1.5 text-[11px] text-[#94a3b8]">
+                    <Check className="h-3 w-3 text-[#22c197]" strokeWidth={3} />
+                    Puedes enviar más de una necesidad
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

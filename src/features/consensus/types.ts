@@ -3,23 +3,16 @@
  *  All data for a session lives in a single JSON file.
  * ────────────────────────────────────────────────────────── */
 
-export const CATEGORIES = [
+export const DEFAULT_CATEGORIES: readonly string[] = [
   "software",
   "licencias",
   "equipamiento",
   "adecuaciones",
   "otro",
-] as const;
+];
 
-export type Category = (typeof CATEGORIES)[number];
-
-export const CATEGORY_LABELS: Record<Category, string> = {
-  software: "Software",
-  licencias: "Licencias",
-  equipamiento: "Equipamiento",
-  adecuaciones: "Adecuaciones",
-  otro: "Otro",
-};
+/** Dynamic string — sessions can define their own category set. */
+export type Category = string;
 
 export const PRIORITIES = ["critica", "alta", "media", "baja"] as const;
 export type Priority = (typeof PRIORITIES)[number];
@@ -72,7 +65,43 @@ export interface Need {
   scope: number; // 1–5
   score: number; // impact × urgency × scope (max 125)
   priority: Priority;
+  groupId: string | null; // consolidation group, null when standalone
   submittedAt: string; // ISO
+}
+
+/** A manually-created consolidation group (the admin merges similar needs). */
+export interface ConsensusGroup {
+  id: string;
+  name: string;
+}
+
+/** Collective-validation tally for a votable item (a need or a group). */
+export interface VoteTally {
+  up: number;
+  down: number;
+}
+
+export type VoteTarget = "need" | "group";
+export type VoteValue = -1 | 1;
+
+/** Map key for a vote target: `need:<id>` or `group:<id>`. */
+export function voteKey(kind: VoteTarget, id: string): string {
+  return `${kind}:${id}`;
+}
+
+/** A group with its aggregated needs — computed client-side for the consolidated view. */
+export interface ConsolidatedNeed {
+  id: string; // group id
+  name: string; // canonical group name
+  needs: Need[];
+  count: number; // how many needs in the group
+  participants: number; // distinct participants in the group
+  categories: string[]; // distinct categories present
+  avgImpact: number;
+  avgUrgency: number;
+  avgScope: number;
+  score: number; // aggregate score from rounded averages
+  priority: Priority;
 }
 
 export type SessionStatus = "open" | "closed";
@@ -80,7 +109,11 @@ export type SessionStatus = "open" | "closed";
 export interface ConsensusSession {
   code: string; // 6-char alphanumeric e.g. "AB12CD"
   name: string; // human-readable session name
-  status: SessionStatus;
+  status: SessionStatus; // effective status (honors closesAt)
+  categories: string[]; // admin-defined, defaults to DEFAULT_CATEGORIES
+  groups: ConsensusGroup[]; // manual consolidation groups
+  votes: Record<string, VoteTally>; // keyed by voteKey(kind, id)
+  closesAt: string | null; // optional auto-close deadline (ISO)
   createdAt: string; // ISO
   needs: Need[];
 }
@@ -89,7 +122,9 @@ export interface ConsensusSession {
 export interface SessionSummary {
   code: string;
   name: string;
-  status: SessionStatus;
+  status: SessionStatus; // effective status (honors closesAt)
+  categories: string[];
+  closesAt: string | null;
   createdAt: string;
   needCount: number;
 }
@@ -124,12 +159,27 @@ export interface SessionStats {
   highCount: number;
   mediumCount: number;
   lowCount: number;
-  categoryDistribution: Record<Category, number>;
+  categoryDistribution: Record<string, number>;
   uniqueAreas: string[];
+  /** Distinct participants, keyed by normalized name. */
+  uniqueParticipants: number;
+  /** Needs per participant (totalNeeds / uniqueParticipants), 1 decimal. */
+  avgPerParticipant: number;
+  /** Category with the most needs, or null when there are none. */
+  dominantCategory: { category: string; count: number } | null;
 }
 
 export interface DashboardResponse {
-  session: { code: string; name: string; status: SessionStatus; createdAt: string };
+  session: {
+    code: string;
+    name: string;
+    status: SessionStatus;
+    categories: string[];
+    groups: ConsensusGroup[];
+    closesAt: string | null;
+    createdAt: string;
+  };
   needs: Need[];
   stats: SessionStats;
+  votes: Record<string, VoteTally>;
 }

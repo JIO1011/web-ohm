@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import { getSession } from "@/lib/consensus-repo";
 import NeedForm from "@/features/consensus/need-form";
 
+// Always fetch fresh — the admin can open/close the session at any time and
+// participants must see the current status without a stale cached render.
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ code: string }>;
 }
@@ -31,6 +35,7 @@ export default async function ConsensusParticipantPage({ params }: Props) {
       sessionCode={session.code}
       sessionName={session.name}
       sessionStatus={session.status}
+      categories={session.categories}
     />
   );
 }

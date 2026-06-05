@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -24,13 +24,44 @@ export default function SiteShell({
   const pathname = usePathname();
   const isStandalone = STANDALONE_PREFIXES.some((prefix) => pathname?.startsWith(prefix));
 
+  // Whether a Supabase auth session exists (i.e. the viewer is a facilitator).
+  // Checked only on /consensus routes, lazy-loaded so the marketing bundle never
+  // pulls in Supabase. Lets the results "Volver" return owners to their panel.
+  const [hasAuthSession, setHasAuthSession] = useState(false);
+  useEffect(() => {
+    if (!pathname?.startsWith("/consensus")) return;
+    let active = true;
+    void import("@/lib/supabase/client").then(({ createClient }) => {
+      const supabase = createClient();
+      if (!supabase) return;
+      void supabase.auth.getSession().then(({ data }) => {
+        if (active) setHasAuthSession(Boolean(data.session));
+      });
+    });
+    return () => {
+      active = false;
+    };
+  }, [pathname]);
+
   if (isStandalone) {
-    // /calcular-proyecto subpages go back to the tools hub; /consensus pages
-    // (often reached via a shared link) and the hub itself go back home.
-    const backHref =
-      pathname && pathname.startsWith("/calcular-proyecto") && pathname !== "/calcular-proyecto"
-        ? "/calcular-proyecto"
-        : "/";
+    // Back-navigation rules:
+    //  /calcular-proyecto subpages      → /calcular-proyecto (tools hub)
+    //  /consensus/[code]/resultados     → /consensus/admin (owner) or landing
+    //  any other /consensus/* page      → /calcular-proyecto/consensus (landing)
+    //  /calcular-proyecto (hub itself)  → / (home)
+    const backHref = (() => {
+      if (!pathname) return "/";
+      if (pathname.startsWith("/calcular-proyecto")) {
+        return pathname === "/calcular-proyecto" ? "/" : "/calcular-proyecto";
+      }
+      if (/^\/consensus\/[^/]+\/resultados$/.test(pathname)) {
+        return hasAuthSession ? "/consensus/admin" : "/calcular-proyecto/consensus";
+      }
+      if (pathname.startsWith("/consensus")) {
+        return "/calcular-proyecto/consensus";
+      }
+      return "/";
+    })();
     return (
       <>
         <header className="absolute top-0 left-0 z-30 w-full">

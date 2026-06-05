@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { addNeed, getSession } from "@/lib/consensus-repo";
 import { computeStats, sortByScore } from "@/features/consensus/scoring";
-import { CATEGORIES } from "@/features/consensus/types";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import { isSupabaseConfigured } from "@/lib/env";
 import { broadcastSessionChanged } from "@/lib/supabase/broadcast";
@@ -12,7 +11,7 @@ export const runtime = "nodejs";
 const NeedBody = z.object({
   name: z.string().min(1, "Nombre es obligatorio").max(120),
   area: z.string().min(1, "Área es obligatoria").max(120),
-  category: z.enum(CATEGORIES),
+  category: z.string().min(1).max(40),
   description: z.string().min(5, "Descripción muy corta").max(500),
   // Optional: lowers participant friction (see UX phase 1).
   justification: z.string().max(500).optional().default(""),
@@ -109,10 +108,14 @@ export async function GET(req: Request, { params }: { params: Promise<{ code: st
         code: session.code,
         name: session.name,
         status: session.status,
+        categories: session.categories,
+        groups: session.groups,
+        closesAt: session.closesAt,
         createdAt: session.createdAt,
       },
       needs: sortedNeeds,
       stats,
+      votes: session.votes,
     });
   } catch (err) {
     console.error("Error fetching consensus session:", err);
